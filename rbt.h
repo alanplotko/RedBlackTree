@@ -18,8 +18,8 @@ class rbt
         node* search(double dta);
         void inorder();
         void printBreadthFirst();
-        rbt* sortedArray(T[]);
-        void deleteKey();
+        rbt* sortedArray(double[]);
+        void deleteKey(int key);
     private:
         node* root;
         void insert(node* nd, double dta);

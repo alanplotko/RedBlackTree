@@ -330,7 +330,7 @@ void rbt::printBreadthFirst()
     Turn sorted array into RBTree
 -------------------------------------*/
 
-rbt* rbt::sortedArray(T[])
+rbt* rbt::sortedArray(double[])
 {
   
 }
@@ -339,7 +339,7 @@ rbt* rbt::sortedArray(T[])
     Delete node associated with key
 -------------------------------------*/
 
-void rbt::deleteKey()
+void rbt::deleteKey(int key)
 {
   
 }
