@@ -6,4 +6,4 @@ To implement:
 - [DONE] ~~search~~
 - delete key
 - sorted array
-- [In Progress] switch from double to std::pair<int, T>
+- [In Progress] switch from double to std::pair\<int, T\>
