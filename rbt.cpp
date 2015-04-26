@@ -250,17 +250,17 @@ void rbt::rotateRight(node *nd)
 }
 
 /*-----------------------------------
-    Find and return a node by value
+    Search and return node by value
 -------------------------------------*/
 
 node* rbt::search(double dta)
 {
     if(root == nullptr) return nullptr;
-    return find(root, dta);
+    return search(root, dta);
 }
 
 /*-----------------------------------
-    Recursive call for find
+    Recursive call for search
 -------------------------------------*/
 
 node* rbt::search(node* nd, double dta)
@@ -269,11 +269,11 @@ node* rbt::search(node* nd, double dta)
     if(dta == nd->data) return nd;
     if(dta > nd->data)
     {
-        return find(nd->right, dta);
+        return search(nd->right, dta);
     }
     else
     {
-        return find(nd->left, dta);
+        return search(nd->left, dta);
     }
 }
 
