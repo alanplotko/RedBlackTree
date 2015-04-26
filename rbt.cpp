@@ -1,38 +1,38 @@
-#include "avl.h"
+#include "rbt.h"
 #include <queue>
 
 /*-----------------------------------
-    AVL tree destructor starting
+    RBT tree destructor starting
     at the root node
 -------------------------------------*/
 
-avl::~avl() { cleanAvl(root); }
+rbt::~rbt() { cleanRbt(root); }
 
 /*-----------------------------------
     Called by the destructor;
-    destroys all nodes in AVL tree
+    destroys all nodes in RBT tree
 -------------------------------------*/
 
-void avl::cleanAvl(node* nd)
+void rbt::cleanRbt(node* nd)
 {
     // Stop check if node is nullptr
     if(nd == nullptr) return;
 
     // If there's a left node, destroy it via a recursive call
-    if(nd->left != nullptr) cleanAvl(nd->left);
+    if(nd->left != nullptr) cleanRbt(nd->left);
 
     // If there's a right node, destroy it via a recursive call
-    if(nd->right != nullptr) cleanAvl(nd->right);
+    if(nd->right != nullptr) cleanRbt(nd->right);
 
     // Delete the node
     delete nd;
 }
 
 /*-----------------------------------
-    Insert double into AVL tree
+    Insert double into RBT tree
 -------------------------------------*/
 
-void avl::insert(double dta)
+void rbt::insert(double dta)
 {
     if(root == nullptr)
     {
@@ -50,7 +50,7 @@ void avl::insert(double dta)
     Recursive call for insert
 -------------------------------------*/
 
-void avl::insert(node *nd, double dta)
+void rbt::insert(node *nd, double dta)
 {
     if(dta > nd->data)
     {
@@ -120,7 +120,7 @@ void avl::insert(node *nd, double dta)
     Get balance factor for rotations
 -------------------------------------*/
 
-int avl::balanceFactor(node *nd)
+int rbt::balanceFactor(node *nd)
 {
     int left = (nd->left == nullptr ? 0 : nd->left->height);
     int right = (nd->right == nullptr ? 0 : nd->right->height);
@@ -132,7 +132,7 @@ int avl::balanceFactor(node *nd)
     height of its child nodes, plus 1
 -------------------------------------*/
 
-void avl::maxHeight(node *nd)
+void rbt::maxHeight(node *nd)
 {
     int left = (nd->left == nullptr ? 0 : nd->left->height);
     int right = (nd->right == nullptr ? 0 : nd->right->height);
@@ -140,10 +140,10 @@ void avl::maxHeight(node *nd)
 }
 
 /*-----------------------------------
-    Rotate AVL tree to the left
+    Rotate RBT tree to the left
 -------------------------------------*/
 
-void avl::rotateLeft(node *nd)
+void rbt::rotateLeft(node *nd)
 {
     // DEBUG: // std::cout << "Working left with " << nd->data << std::endl;
     node *tmp = nd->right;
@@ -180,10 +180,10 @@ void avl::rotateLeft(node *nd)
 }
 
 /*-----------------------------------
-    Rotate AVL tree to the right
+    Rotate RBT tree to the right
 -------------------------------------*/
 
-void avl::rotateRight(node *nd)
+void rbt::rotateRight(node *nd)
 {
     // DEBUG: // std::cout << "Working right with " << nd->data << std::endl;
 
@@ -253,7 +253,7 @@ void avl::rotateRight(node *nd)
     Find and return a node by value
 -------------------------------------*/
 
-node* avl::find(double dta)
+node* rbt::find(double dta)
 {
     if(root == nullptr) return nullptr;
     return find(root, dta);
@@ -263,7 +263,7 @@ node* avl::find(double dta)
     Recursive call for find
 -------------------------------------*/
 
-node* avl::find(node* nd, double dta)
+node* rbt::find(node* nd, double dta)
 {
     if(nd == nullptr) return nullptr;
     if(dta == nd->data) return nd;
@@ -282,7 +282,7 @@ node* avl::find(node* nd, double dta)
     traversing left and right trees
 -------------------------------------*/
 
-void avl::inorder()
+void rbt::inorder()
 {
     if(root == nullptr) return;
     inorder(root);
@@ -292,7 +292,7 @@ void avl::inorder()
     Recursive call for inorder
 -------------------------------------*/
 
-void avl::inorder(node* nd)
+void rbt::inorder(node* nd)
 {
     if(nd == nullptr) return;
     inorder(nd->left);
@@ -304,7 +304,7 @@ void avl::inorder(node* nd)
     Print node values in level order
 -------------------------------------*/
 
-void avl::printBreadthFirst()
+void rbt::printBreadthFirst()
 {
     if(root == nullptr) return;
     std::queue<node*> nodeSet;

@@ -1,16 +1,16 @@
-#ifndef AVL_H_
-#define AVL_H_
+#ifndef RBT_H_
+#define RBT_H_
 
 #include <iostream>
 #include "node.h"
 
-class avl
+class rbt
 {
     public:
-        avl():root(nullptr){}
-        ~avl();
+        rbt():root(nullptr){}
+        ~rbt();
         void insert(double dta);
-        friend std::ostream& operator<<(std::ostream &out, avl &willow);
+        friend std::ostream& operator<<(std::ostream &out, rbt &willow);
         int balanceFactor(node *nd);
         void maxHeight(node *nd);
         void rotateLeft(node *nd);
@@ -24,7 +24,7 @@ class avl
         void insert(node* nd, double dta);
         node* find(node* nd, double dta);
         void inorder(node* nd);
-        void cleanAvl(node* nd);
+        void cleanRbt(node* nd);
 };
 
 
