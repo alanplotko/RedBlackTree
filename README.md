@@ -2,8 +2,8 @@
 
 To implement:
 - insert
-- print inOrder
-- search
+- [DONE] ~~print inOrder~~
+- [DONE] ~~search~~
 - delete key
 - sorted array
-- switch from double to templated
+- [In Progress] switch from double to std::pair<int, T>
