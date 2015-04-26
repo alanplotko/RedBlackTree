@@ -1,18 +1,19 @@
 #ifndef NODE_H_
 #define NODE_H_
 
-enum type{RED, BLACK};
+enum type {RED, BLACK};
 
+template <typename T>
 struct node
 {
-    node *right;
-    node *left;
-    node *parent;
-    type color; 
+    node<T> *right;
+    node<T> *left;
+    node<T> *parent;
+    type color;
     int height;
-    double data;
-    node():right(nullptr),left(nullptr),parent(nullptr),height(1),data(0),color(RED){}
-    node(double dta):right(nullptr),left(nullptr),parent(nullptr),height(1),data(dta),color(RED){}
+    std::pair<int, T> data;
+    node():right(nullptr),left(nullptr),parent(nullptr),height(1),data(nullptr),color(RED){}
+    node(std::pair<int, T> item):right(nullptr),left(nullptr),parent(nullptr),height(1),data(item),color(RED){}
 };
 
 #endif
