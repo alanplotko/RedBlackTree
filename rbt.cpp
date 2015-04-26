@@ -253,7 +253,7 @@ void rbt::rotateRight(node *nd)
     Find and return a node by value
 -------------------------------------*/
 
-node* rbt::find(double dta)
+node* rbt::search(double dta)
 {
     if(root == nullptr) return nullptr;
     return find(root, dta);
@@ -263,7 +263,7 @@ node* rbt::find(double dta)
     Recursive call for find
 -------------------------------------*/
 
-node* rbt::find(node* nd, double dta)
+node* rbt::search(node* nd, double dta)
 {
     if(nd == nullptr) return nullptr;
     if(dta == nd->data) return nd;
@@ -324,4 +324,22 @@ void rbt::printBreadthFirst()
         nodeSet.pop();
     }
     std::cout << std::endl;
+}
+
+/*-----------------------------------
+    Turn sorted array into RBTree
+-------------------------------------*/
+
+rbt* rbt::sortedArray(T[])
+{
+  
+}
+
+/*-----------------------------------
+    Delete node associated with key
+-------------------------------------*/
+
+void rbt::deleteKey()
+{
+  
 }

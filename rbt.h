@@ -15,14 +15,15 @@ class rbt
         void maxHeight(node *nd);
         void rotateLeft(node *nd);
         void rotateRight(node *nd);
-        node* find(double dta);
+        node* search(double dta);
         void inorder();
         void printBreadthFirst();
-    
+        rbt* sortedArray(T[]);
+        void deleteKey();
     private:
         node* root;
         void insert(node* nd, double dta);
-        node* find(node* nd, double dta);
+        node* search(node* nd, double dta);
         void inorder(node* nd);
         void cleanRbt(node* nd);
 };
