@@ -22,12 +22,16 @@ class rbt
         void printBreadthFirst();
         rbt* sortedArray(std::pair<int, T> items[]);
         void deleteKey(int key);
+        void inOrderColor();
+        void childCheck();
+        void pathCheck();
     private:
         node<T> *root;
         void insert(node<T> *nd, std::pair<int, T> item);
         node<T>* search(int key, node<T> *nd);
         void inorder(node<T> *nd);
         void cleanRbt(node<T> *nd);
+        void inOrderColor(node<T> *nd);
 };
 
 #include "rbt.cpp"
