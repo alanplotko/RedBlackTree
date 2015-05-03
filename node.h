@@ -1,6 +1,8 @@
 #ifndef NODE_H_
 #define NODE_H_
 
+#include <utility>
+
 enum type {RED, BLACK};
 
 template <typename T>

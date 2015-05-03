@@ -41,7 +41,7 @@ void rbt<T>::insert(std::pair<int, T> item)
     {
         node<T> *nd = new node<T>(item);
         root = nd;
-        // DEBUG: // std::cout << nd->data->first << ", Height: " << nd->height << ", Bfactor: " << this->balanceFactor(nd) << std::endl;
+        // DEBUG: // std::cout << nd->data.first << ", Height: " << nd->height << ", Bfactor: " << this->balanceFactor(nd) << std::endl;
     }
     else
     {
@@ -56,7 +56,7 @@ void rbt<T>::insert(std::pair<int, T> item)
 template <class T>
 void rbt<T>::insert(node<T> *nd, std::pair<int, T> item)
 {
-    if(item.first > nd->data->first)
+    if(item.first > nd->data.first)
     {
         if(nd->right == nullptr)
         {
@@ -125,7 +125,7 @@ void rbt<T>::insert(node<T> *nd, std::pair<int, T> item)
 -------------------------------------*/
 
 template <class T>
-int rbt<T>::balanceFactor(node *nd)
+int rbt<T>::balanceFactor(node<T> *nd)
 {
     int left = (nd->left == nullptr ? 0 : nd->left->height);
     int right = (nd->right == nullptr ? 0 : nd->right->height);
@@ -138,7 +138,7 @@ int rbt<T>::balanceFactor(node *nd)
 -------------------------------------*/
 
 template <class T>
-void rbt<T>::maxHeight(node *nd)
+void rbt<T>::maxHeight(node<T> *nd)
 {
     int left = (nd->left == nullptr ? 0 : nd->left->height);
     int right = (nd->right == nullptr ? 0 : nd->right->height);
@@ -152,7 +152,7 @@ void rbt<T>::maxHeight(node *nd)
 template <class T>
 void rbt<T>::rotateLeft(node<T> *nd)
 {
-    // DEBUG: // std::cout << "Working left with " << nd->data->first << std::endl;
+    // DEBUG: // std::cout << "Working left with " << nd->data.first << std::endl;
     node<T> *tmp = nd->right;
     tmp->parent = nd->parent;
     nd->right = tmp->left;
@@ -193,15 +193,15 @@ void rbt<T>::rotateLeft(node<T> *nd)
 template <class T>
 void rbt<T>::rotateRight(node<T> *nd)
 {
-    // DEBUG: // std::cout << "Working right with " << nd->data->first << std::endl;
+    // DEBUG: // std::cout << "Working right with " << nd->data.first << std::endl;
 
     node<T> *tmp = nd->left;
 
-    // DEBUG: // std::cout << "Set tmp to " << nd->left->data->first << std::endl;
+    // DEBUG: // std::cout << "Set tmp to " << nd->left->data.first << std::endl;
 
     tmp->parent = nd->parent;
 
-    // DEBUG: // T test = (nd->parent == nullptr ? 0 : nd->parent->data->first);
+    // DEBUG: // T test = (nd->parent == nullptr ? 0 : nd->parent->data.first);
     // DEBUG: // std::cout << "Set tmp->parent to " << test << std::endl;
 
     nd->left = tmp->right;
@@ -210,19 +210,19 @@ void rbt<T>::rotateRight(node<T> *nd)
 
     if(nd->left != nullptr)
     {
-    // DEBUG: // std::cout << "Set nd->left->parent to " << nd->data->first << std::endl;
+    // DEBUG: // std::cout << "Set nd->left->parent to " << nd->data.first << std::endl;
     nd->left->parent = nd;
     }
 
     tmp->right = nd;
 
-    // DEBUG: // std::cout << "Set tmp->right to " << nd->data->first << std::endl;
+    // DEBUG: // std::cout << "Set tmp->right to " << nd->data.first << std::endl;
 
     nd->parent = tmp;
 
-    // DEBUG: // std::cout << "Set nd->parent to " << tmp->data->first << std::endl;
+    // DEBUG: // std::cout << "Set nd->parent to " << tmp->data.first << std::endl;
 
-    // DEBUG: // T test2 = (tmp->parent == nullptr ? 0 : tmp->parent->data->first);
+    // DEBUG: // T test2 = (tmp->parent == nullptr ? 0 : tmp->parent->data.first);
     // DEBUG: // std::cout << "tmp->parent is " << test2 << std::endl;
 
     if (tmp->parent != nullptr)
@@ -230,12 +230,12 @@ void rbt<T>::rotateRight(node<T> *nd)
         if (tmp->parent->right == nd)
         {
             tmp->parent->right = tmp;
-            // DEBUG: // std::cout << "Set tmp->parent->right to " << tmp->data->first << std::endl;
+            // DEBUG: // std::cout << "Set tmp->parent->right to " << tmp->data.first << std::endl;
         }
         else
         {
             tmp->parent->left = tmp;
-            // DEBUG: // std::cout << "Set tmp->parent->left to " << tmp->data->first << std::endl;
+            // DEBUG: // std::cout << "Set tmp->parent->left to " << tmp->data.first << std::endl;
         }
     }
     else
@@ -253,8 +253,8 @@ void rbt<T>::rotateRight(node<T> *nd)
 
     nd = tmp;
 
-    // DEBUG: // std::cout << "Set nd to " << tmp->data->first << std::endl;
-    // DEBUG: // std::cout << "Result: nd = " << nd->data->first << ", left = " << nd->left->data->first << ", right = " << nd->right->data->first << std::endl;
+    // DEBUG: // std::cout << "Set nd to " << tmp->data.first << std::endl;
+    // DEBUG: // std::cout << "Result: nd = " << nd->data.first << ", left = " << nd->left->data.first << ", right = " << nd->right->data.first << std::endl;
 }
 
 /*-----------------------------------
@@ -265,7 +265,7 @@ template <class T>
 node<T>* rbt<T>::search(int key)
 {
     if(root == nullptr) return nullptr;
-    return search(root, key);
+    return search(key, root);
 }
 
 /*-----------------------------------
@@ -273,17 +273,17 @@ node<T>* rbt<T>::search(int key)
 -------------------------------------*/
 
 template <class T>
-node<T>* rbt<T>::search(node<T> *nd, int key)
+node<T>* rbt<T>::search(int key, node<T> *nd)
 {
     if(nd == nullptr) return nullptr;
-    if(dta == nd->data->first) return nd;
-    if(key > nd->data->first)
+    if(key == nd->data.first) return nd;
+    if(key > nd->data.first)
     {
-        return search(nd->right, key);
+        return search(key, nd->right);
     }
     else
     {
-        return search(nd->left, key);
+        return search(key, nd->left);
     }
 }
 
@@ -308,7 +308,7 @@ void rbt<T>::inorder(node<T>* nd)
 {
     if(nd == nullptr) return;
     inorder(nd->left);
-    std::cout << nd->data->first << std::endl;
+    std::cout << nd->data.first << std::endl;
     inorder(nd->right);
 }
 
@@ -333,7 +333,7 @@ void rbt<T>::printBreadthFirst()
         {
             nodeSet.push(front->right);
         }
-        std::cout << front->data->first << std::endl;
+        std::cout << front->data.first << std::endl;
         nodeSet.pop();
     }
     std::cout << std::endl;
@@ -344,7 +344,7 @@ void rbt<T>::printBreadthFirst()
 -------------------------------------*/
 
 template <class T>
-rbt<T>* rbt<T>::sortedArray(std::pair<int, T>[] items)
+rbt<T>* rbt<T>::sortedArray(std::pair<int, T> items[])
 {
     /*  Note: Are we inserting elements in the sorted
         array to the RBT or are we extracting elements

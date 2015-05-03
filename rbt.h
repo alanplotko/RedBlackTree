@@ -17,15 +17,15 @@ class rbt
         void maxHeight(node<T> *nd);
         void rotateLeft(node<T> *nd);
         void rotateRight(node<T> *nd);
-        node* search(int key);
+        node<T>* search(int key);
         void inorder();
         void printBreadthFirst();
-        rbt* sortedArray(std::pair<int, T>[]);
+        rbt* sortedArray(std::pair<int, T> items[]);
         void deleteKey(int key);
     private:
         node<T> *root;
         void insert(node<T> *nd, std::pair<int, T> item);
-        node<T>* search(node<T> *nd, int key);
+        node<T>* search(int key, node<T> *nd);
         void inorder(node<T> *nd);
         void cleanRbt(node<T> *nd);
 };
