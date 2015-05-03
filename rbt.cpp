@@ -6,14 +6,16 @@
     at the root node
 -------------------------------------*/
 
-rbt::~rbt() { cleanRbt(root); }
+template <class T>
+rbt<T>::~rbt() { cleanRbt(root); }
 
 /*-----------------------------------
     Called by the destructor;
     destroys all nodes in RBT tree
 -------------------------------------*/
 
-void rbt::cleanRbt(node* nd)
+template <class T>
+void rbt<T>::cleanRbt(node<T> *nd)
 {
     // Stop check if node is nullptr
     if(nd == nullptr) return;
@@ -29,20 +31,21 @@ void rbt::cleanRbt(node* nd)
 }
 
 /*-----------------------------------
-    Insert double into RBT tree
+    Insert std::pair into RBT tree
 -------------------------------------*/
 
-void rbt::insert(double dta)
+template <class T>
+void rbt<T>::insert(std::pair<int, T> item)
 {
     if(root == nullptr)
     {
-        node* nd = new node(dta);
+        node<T> *nd = new node<T>(item);
         root = nd;
-        // DEBUG: // std::cout << nd->data << ", Height: " << nd->height << ", Bfactor: " << this->balanceFactor(nd) << std::endl;
+        // DEBUG: // std::cout << nd->data.first << ", Height: " << nd->height << ", Bfactor: " << this->balanceFactor(nd) << std::endl;
     }
     else
     {
-        insert(root, dta);
+        insert(root, item);
     }
 }
 
@@ -50,32 +53,33 @@ void rbt::insert(double dta)
     Recursive call for insert
 -------------------------------------*/
 
-void rbt::insert(node *nd, double dta)
+template <class T>
+void rbt<T>::insert(node<T> *nd, std::pair<int, T> item)
 {
-    if(dta > nd->data)
+    if(item.first > nd->data.first)
     {
         if(nd->right == nullptr)
         {
-            node* newNode = new node(dta);
+            node<T>* newNode = new node<T>(item);
             nd->right = newNode;
             newNode->parent = nd;
         }
         else
         {
-            insert(nd->right, dta);
+            insert(nd->right, item);
         }
     }
     else
     {
         if(nd->left == nullptr)
         {
-            node* newNode = new node(dta);
+            node<T> *newNode = new node<T>(item);
             nd->left = newNode;
             newNode->parent = nd;
         }
         else
         {
-            insert(nd->left, dta);
+            insert(nd->left, item);
         }
     }
   
@@ -120,7 +124,8 @@ void rbt::insert(node *nd, double dta)
     Get balance factor for rotations
 -------------------------------------*/
 
-int rbt::balanceFactor(node *nd)
+template <class T>
+int rbt<T>::balanceFactor(node<T> *nd)
 {
     int left = (nd->left == nullptr ? 0 : nd->left->height);
     int right = (nd->right == nullptr ? 0 : nd->right->height);
@@ -132,7 +137,8 @@ int rbt::balanceFactor(node *nd)
     height of its child nodes, plus 1
 -------------------------------------*/
 
-void rbt::maxHeight(node *nd)
+template <class T>
+void rbt<T>::maxHeight(node<T> *nd)
 {
     int left = (nd->left == nullptr ? 0 : nd->left->height);
     int right = (nd->right == nullptr ? 0 : nd->right->height);
@@ -143,10 +149,11 @@ void rbt::maxHeight(node *nd)
     Rotate RBT tree to the left
 -------------------------------------*/
 
-void rbt::rotateLeft(node *nd)
+template <class T>
+void rbt<T>::rotateLeft(node<T> *nd)
 {
-    // DEBUG: // std::cout << "Working left with " << nd->data << std::endl;
-    node *tmp = nd->right;
+    // DEBUG: // std::cout << "Working left with " << nd->data.first << std::endl;
+    node<T> *tmp = nd->right;
     tmp->parent = nd->parent;
     nd->right = tmp->left;
 
@@ -183,17 +190,18 @@ void rbt::rotateLeft(node *nd)
     Rotate RBT tree to the right
 -------------------------------------*/
 
-void rbt::rotateRight(node *nd)
+template <class T>
+void rbt<T>::rotateRight(node<T> *nd)
 {
-    // DEBUG: // std::cout << "Working right with " << nd->data << std::endl;
+    // DEBUG: // std::cout << "Working right with " << nd->data.first << std::endl;
 
-    node* tmp = nd->left;
+    node<T> *tmp = nd->left;
 
-    // DEBUG: // std::cout << "Set tmp to " << nd->left->data << std::endl;
+    // DEBUG: // std::cout << "Set tmp to " << nd->left->data.first << std::endl;
 
     tmp->parent = nd->parent;
 
-    // DEBUG: // double test = (nd->parent == nullptr ? 0 : nd->parent->data);
+    // DEBUG: // T test = (nd->parent == nullptr ? 0 : nd->parent->data.first);
     // DEBUG: // std::cout << "Set tmp->parent to " << test << std::endl;
 
     nd->left = tmp->right;
@@ -202,19 +210,19 @@ void rbt::rotateRight(node *nd)
 
     if(nd->left != nullptr)
     {
-    // DEBUG: // std::cout << "Set nd->left->parent to " << nd->data << std::endl;
+    // DEBUG: // std::cout << "Set nd->left->parent to " << nd->data.first << std::endl;
     nd->left->parent = nd;
     }
 
     tmp->right = nd;
 
-    // DEBUG: // std::cout << "Set tmp->right to " << nd->data << std::endl;
+    // DEBUG: // std::cout << "Set tmp->right to " << nd->data.first << std::endl;
 
     nd->parent = tmp;
 
-    // DEBUG: // std::cout << "Set nd->parent to " << tmp->data << std::endl;
+    // DEBUG: // std::cout << "Set nd->parent to " << tmp->data.first << std::endl;
 
-    // DEBUG: // double test2 = (tmp->parent == nullptr ? 0 : tmp->parent->data);
+    // DEBUG: // T test2 = (tmp->parent == nullptr ? 0 : tmp->parent->data.first);
     // DEBUG: // std::cout << "tmp->parent is " << test2 << std::endl;
 
     if (tmp->parent != nullptr)
@@ -222,12 +230,12 @@ void rbt::rotateRight(node *nd)
         if (tmp->parent->right == nd)
         {
             tmp->parent->right = tmp;
-            // DEBUG: // std::cout << "Set tmp->parent->right to " << tmp->data << std::endl;
+            // DEBUG: // std::cout << "Set tmp->parent->right to " << tmp->data.first << std::endl;
         }
         else
         {
             tmp->parent->left = tmp;
-            // DEBUG: // std::cout << "Set tmp->parent->left to " << tmp->data << std::endl;
+            // DEBUG: // std::cout << "Set tmp->parent->left to " << tmp->data.first << std::endl;
         }
     }
     else
@@ -245,35 +253,37 @@ void rbt::rotateRight(node *nd)
 
     nd = tmp;
 
-    // DEBUG: // std::cout << "Set nd to " << tmp->data << std::endl;
-    // DEBUG: // std::cout << "Result: nd = " << nd->data << ", left = " << nd->left->data << ", right = " << nd->right->data << std::endl;
+    // DEBUG: // std::cout << "Set nd to " << tmp->data.first << std::endl;
+    // DEBUG: // std::cout << "Result: nd = " << nd->data.first << ", left = " << nd->left->data.first << ", right = " << nd->right->data.first << std::endl;
 }
 
 /*-----------------------------------
-    Search and return node by value
+    Search and return node by key
 -------------------------------------*/
 
-node* rbt::search(double dta)
+template <class T>
+node<T>* rbt<T>::search(int key)
 {
     if(root == nullptr) return nullptr;
-    return search(root, dta);
+    return search(key, root);
 }
 
 /*-----------------------------------
     Recursive call for search
 -------------------------------------*/
 
-node* rbt::search(node* nd, double dta)
+template <class T>
+node<T>* rbt<T>::search(int key, node<T> *nd)
 {
     if(nd == nullptr) return nullptr;
-    if(dta == nd->data) return nd;
-    if(dta > nd->data)
+    if(key == nd->data.first) return nd;
+    if(key > nd->data.first)
     {
-        return search(nd->right, dta);
+        return search(key, nd->right);
     }
     else
     {
-        return search(nd->left, dta);
+        return search(key, nd->left);
     }
 }
 
@@ -282,7 +292,8 @@ node* rbt::search(node* nd, double dta)
     traversing left and right trees
 -------------------------------------*/
 
-void rbt::inorder()
+template <class T>
+void rbt<T>::inorder()
 {
     if(root == nullptr) return;
     inorder(root);
@@ -292,11 +303,12 @@ void rbt::inorder()
     Recursive call for inorder
 -------------------------------------*/
 
-void rbt::inorder(node* nd)
+template <class T>
+void rbt<T>::inorder(node<T>* nd)
 {
     if(nd == nullptr) return;
     inorder(nd->left);
-    std::cout << nd->data << std::endl;
+    std::cout << nd->data.first << std::endl;
     inorder(nd->right);
 }
 
@@ -304,14 +316,15 @@ void rbt::inorder(node* nd)
     Print node values in level order
 -------------------------------------*/
 
-void rbt::printBreadthFirst()
+template <class T>
+void rbt<T>::printBreadthFirst()
 {
     if(root == nullptr) return;
-    std::queue<node*> nodeSet;
+    std::queue<node<T>*> nodeSet;
     nodeSet.push(root);
     while(!nodeSet.empty())
     {
-        node* front = nodeSet.front();
+        node<T>* front = nodeSet.front();
         if(front->left != nullptr)
         {
             nodeSet.push(front->left);
@@ -320,26 +333,35 @@ void rbt::printBreadthFirst()
         {
             nodeSet.push(front->right);
         }
-        std::cout << front->data << std::endl;
+        std::cout << front->data.first << std::endl;
         nodeSet.pop();
     }
     std::cout << std::endl;
 }
 
 /*-----------------------------------
-    Turn sorted array into RBTree
+    Turn sorted array into RBT
 -------------------------------------*/
 
-rbt* rbt::sortedArray(double[])
+template <class T>
+rbt<T>* rbt<T>::sortedArray(std::pair<int, T> items[])
 {
-  
+    /*  Note: Are we inserting elements in the sorted
+        array to the RBT or are we extracting elements
+        from the RBT and returning a sorted array? */
+
+    /*rbt<T> tree;
+    unsigned int size = items.size();
+    for(int i = 0; i < size; i++)
+    {
+        tree.insert(items[i]);
+    }
+    return tree;*/
 }
 
 /*-----------------------------------
     Delete node associated with key
 -------------------------------------*/
 
-void rbt::deleteKey(int key)
-{
-  
-}
+template <class T>
+void rbt<T>::deleteKey(int key){/* To Do */}
