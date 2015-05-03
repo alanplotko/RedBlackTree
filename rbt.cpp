@@ -47,6 +47,7 @@ void rbt<T>::insert(std::pair<int, T> item)
     {
         insert(root, item);
     }
+    inOrderColor();
 }
 
 /*-----------------------------------
@@ -118,7 +119,6 @@ void rbt<T>::insert(node<T> *nd, std::pair<int, T> item)
             this->rotateLeft(nd);
         }
     }
-    inOrderColor();
 }
 
 /*-----------------------------------
