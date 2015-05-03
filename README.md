@@ -2,11 +2,13 @@
 
 To implement:
 - insert
+  - Update colors on insert
 - [DONE] ~~print inOrder~~
 - [DONE] ~~search~~
 - delete key
 - sorted array
-- [In Progress] switch from double to std::pair\<int, T\>
+  - Confirm with Prof. Gallia about what he wants the function to do
+- [DONE] ~~switch from double to std::pair\<int, T\>~~
 - [Planned] QT GUI
 
 Ideas:
