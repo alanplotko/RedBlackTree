@@ -34,7 +34,7 @@ int main()
     for(auto itr : nums)
     {
         std::clog << "Searching for " << itr;
-        if(itr >= 0) std::clog << "\t";
+        if(itr >= 0 && itr < 10) std::clog << "\t";
         std::clog << "\t...\t";
         node<int> *nd = tree.search(itr);
         if(nd != nullptr)
