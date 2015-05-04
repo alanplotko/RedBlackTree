@@ -82,7 +82,8 @@ void rbt<T>::insert(node<T> *nd, std::pair<int, T> item)
             insert(nd->left, item);
         }
     }
-  
+
+    inOrderColor();
     // Recalculate heights
     maxHeight(nd);
 
@@ -308,7 +309,15 @@ void rbt<T>::inorder(node<T>* nd)
 {
     if(nd == nullptr) return;
     inorder(nd->left);
-    std::cout << nd->data.first << std::endl;
+    std::cout << nd->data.first;
+    if(nd -> color == BLACK)
+    {
+        std::cout <<" "<< "color is black" <<std::endl;
+    }
+    else
+    {
+        std::cout <<" "<< "color is red" <<std::endl;
+    }
     inorder(nd->right);
 }
 
@@ -365,3 +374,67 @@ rbt<T>* rbt<T>::sortedArray(std::pair<int, T> items[])
 
 template <class T>
 void rbt<T>::deleteKey(int key){/* To Do */}
+
+
+/*-----------------------------------
+  Change colors of nodes by RBT properties
+-------------------------------------*/
+template <class T>
+void rbt<T>::inOrderColor()
+{
+    if(root == nullptr)
+        {return;}
+    root -> color = BLACK;
+    inOrderColor(root);
+}
+
+/*-----------------------------------
+  Recursive inOrderColor
+-------------------------------------*/
+
+template <class T>
+void rbt<T>::inOrderColor(node<T> *nd)
+{
+    if(nd == nullptr) return;
+    inOrderColor(nd->left);
+    //childCheck(nd);
+    //pathCheck(nd);
+    inOrderColor(nd->right);
+    
+}
+
+/*-----------------------------------
+  Makes sure red nodes children are black
+-------------------------------------*/
+template <class T>
+void rbt<T>::childCheck(node<T> *nd) 
+{   node<T> *grandPa = nd -> parent -> parent;
+    if(nd != root || nd -> parent -> color != BLACK)
+    {
+        if(grandPa -> left == nd)
+        {
+            if(grandPa -> right -> color == RED)
+            {
+                nd -> parent -> color = BLACK;
+                grandPa -> right -> color = BLACK;
+            }
+
+        }
+        else
+        {
+            if(grandPa -> left -> color == RED)
+            {
+                nd -> parent -> color = BLACK;
+                grandPa -> left -> color = BLACK;
+            }
+
+        }
+        grandPa -> color = RED;
+        
+    }
+    
+}
+
+
+
+
