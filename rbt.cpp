@@ -47,7 +47,6 @@ void rbt<T>::insert(std::pair<int, T> item)
     {
         insert(root, item);
     }
-    inOrderColor();
 }
 
 /*-----------------------------------
@@ -83,7 +82,8 @@ void rbt<T>::insert(node<T> *nd, std::pair<int, T> item)
             insert(nd->left, item);
         }
     }
-  
+
+    inOrderColor();
     // Recalculate heights
     maxHeight(nd);
 
@@ -377,7 +377,7 @@ void rbt<T>::deleteKey(int key){/* To Do */}
 
 
 /*-----------------------------------
-  Changes colors of nodes by RBT properties
+  Change colors of nodes by RBT properties
 -------------------------------------*/
 template <class T>
 void rbt<T>::inOrderColor()
@@ -402,5 +402,39 @@ void rbt<T>::inOrderColor(node<T> *nd)
     inOrderColor(nd->right);
     
 }
+
+/*-----------------------------------
+  Makes sure red nodes children are black
+-------------------------------------*/
+template <class T>
+void rbt<T>::childCheck(node<T> *nd) 
+{   node<T> *grandPa = nd -> parent -> parent;
+    if(nd != root || nd -> parent -> color != BLACK)
+    {
+        if(grandPa -> left == nd)
+        {
+            if(grandPa -> right -> color == RED)
+            {
+                nd -> parent -> color = BLACK;
+                grandPa -> right -> color = BLACK;
+            }
+
+        }
+        else
+        {
+            if(grandPa -> left -> color == RED)
+            {
+                nd -> parent -> color = BLACK;
+                grandPa -> left -> color = BLACK;
+            }
+
+        }
+        grandPa -> color = RED;
+        
+    }
+    
+}
+
+
 
 
