@@ -395,8 +395,12 @@ void rbt<T>::inOrderColor()
 template <class T>
 void rbt<T>::inOrderColor(node<T> *nd)
 {
-    //childCheck();
-    //pathCheck();
+    if(nd == nullptr) return;
+    inOrderColor(nd->left);
+    //childCheck(nd);
+    //pathCheck(nd);
+    inOrderColor(nd->right);
+    
 }
 
 
