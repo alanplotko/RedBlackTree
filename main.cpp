@@ -12,12 +12,11 @@ int main()
 
     for(auto itr : nums)
     {
-        tree.inorder();
-        std::clog << "\nInserting " << itr << ", in order print: " << std::endl;
         tree.insert(std::make_pair(itr, itr));
+        std::clog << "\nInserting " << itr << ", in order print: " << std::endl;
+        tree.inorder();  
     }
 
-    tree.inorder();
 
     std::clog << std::endl;
 

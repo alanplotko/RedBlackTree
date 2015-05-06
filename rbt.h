@@ -23,8 +23,15 @@ class rbt
         rbt* sortedArray(std::pair<int, T> items[]);
         void deleteKey(int key);
         void inOrderColor();
-        void childCheck(node<T> *nd);
+        
         void pathCheck(node<T> *nd);
+        
+        //Color helper functions
+        void childCheck(node<T> *nd);
+        void leftLeft(node<T> *grandPa, node<T> *dad);
+        void leftRight(node<T> *grandPa, node<T> *dad);
+        void rightRight(node<T> *grandPa, node<T> *dad);
+        void rightLeft(node<T> *grandPa, node<T> *dad);
     private:
         node<T> *root;
         void insert(node<T> *nd, std::pair<int, T> item);
