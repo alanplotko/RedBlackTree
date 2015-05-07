@@ -24,7 +24,7 @@ class rbt
         rbt<T> sortedArrayToTree(std::vector<std::pair<int, T> > items);
         std::vector<std::pair<int, T> > treeToSortedArray();
         node<T>* leftmostNode(node<T> *nd);
-        node<T>* deleteKey(int key);
+        void deleteKey(int key);
         int getSize();
         void inOrderColor();
         void childCheck(node<T> *nd);

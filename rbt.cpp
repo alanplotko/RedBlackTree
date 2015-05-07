@@ -347,7 +347,7 @@ void rbt<T>::printBreadthFirst()
         {
             nodeSet.push(front->right);
         }
-        std::cout << front->data.first << std::endl;
+        std::cout << front->data.first << ": " << front->data.second << std::endl;
         nodeSet.pop();
     }
     std::cout << std::endl;
@@ -377,9 +377,9 @@ node<T>* rbt<T>::leftmostNode(node<T> *nd)
 ---------------------------------------*/
 
 template <class T>
-node<T>* rbt<T>::deleteKey(int key)
+void rbt<T>::deleteKey(int key)
 {
-    return deleteKey(root, key);
+    root = deleteKey(root, key);
 }
 
 template <class T>
@@ -387,19 +387,19 @@ node<T>* rbt<T>::deleteKey(node<T> *nd, int key)
 {
     if(nd == nullptr) return nd;
 
-    // Key for deletion < root's key
+    // Key for deletion < node's key
     if(key < nd->data.first)
     {
         nd->left = deleteKey(nd->left, key);
     }
     
-    // Key for deletion > root's key
+    // Key for deletion > node's key
     else if(key > nd->data.first)
     {
         nd->right = deleteKey(nd->right, key);
     }
  
-    // Key for deletion == root's key
+    // Key for deletion == node's key
     else
     {
         // Node has <= 1 child
@@ -419,10 +419,10 @@ node<T>* rbt<T>::deleteKey(node<T> *nd, int key)
         // Node has 2 children: get next node in order
         node<T> *tmp = leftmostNode(nd->right);
  
-        // Copy the next inorder node into the current ndde
-        nd = tmp;
+        // Copy the next inorder node data into the current node data
+        nd->data = tmp->data;
  
-        // Delete the inorder successor
+        // Delete the next inorder node
         nd->right = deleteKey(nd->right, tmp->data.first);
     }
     return nd;

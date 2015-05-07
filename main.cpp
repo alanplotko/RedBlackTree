@@ -53,12 +53,12 @@ int main()
 
     std::clog << std::endl;
 
-    tree.inorder();
+    tree.printBreadthFirst();
     std::clog << std::endl;
     
-    tree.deleteKey(3);
+    tree.deleteKey(7);
     
-    tree.inorder();
+    tree.printBreadthFirst();
 
     /*------------------------
         Sorted Array Tests
