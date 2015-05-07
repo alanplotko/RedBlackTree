@@ -360,6 +360,74 @@ void rbt<T>::printBreadthFirst()
 template <class T>
 int rbt<T>::getSize() { return this->size; }
 
+/*--------------------------
+    Get leftmost node
+----------------------------*/
+
+template <class T>
+node<T>* rbt<T>::leftmostNode(node<T> *nd)
+{
+    node<T> *current = nd;
+    while(current->left != nullptr) current = current->left;
+    return current;
+}
+
+/*-------------------------------------
+    Delete node associated with key
+---------------------------------------*/
+
+template <class T>
+node<T>* rbt<T>::deleteKey(int key)
+{
+    return deleteKey(root, key);
+}
+
+template <class T>
+node<T>* rbt<T>::deleteKey(node<T> *nd, int key)
+{
+    if(nd == nullptr) return nd;
+
+    // Key for deletion < root's key
+    if(key < nd->data.first)
+    {
+        nd->left = deleteKey(nd->left, key);
+    }
+    
+    // Key for deletion > root's key
+    else if(key > nd->data.first)
+    {
+        nd->right = deleteKey(nd->right, key);
+    }
+ 
+    // Key for deletion == root's key
+    else
+    {
+        // Node has <= 1 child
+        if(nd->left == nullptr)
+        {
+            node<T> *tmp = nd->right;
+            delete nd;
+            return tmp;
+        }
+        else if(nd->right == nullptr)
+        {
+            node<T> *tmp = nd->left;
+            delete nd;
+            return tmp;
+        }
+ 
+        // Node has 2 children: get next node in order
+        node<T> *tmp = leftmostNode(nd->right);
+ 
+        // Copy the next inorder node into the current ndde
+        nd = tmp;
+ 
+        // Delete the inorder successor
+        nd->right = deleteKey(nd->right, tmp->data.first);
+    }
+    return nd;
+}
+
 /*-----------------------------------
     Turn sorted array into RBT, vice-versa
 -------------------------------------*/
@@ -383,14 +451,6 @@ std::vector<std::pair<int, T> > rbt<T>::treeToSortedArray() {
     std::sort(this->items.begin(), this->items.end());
     return this->items;
 }
-
-/*-----------------------------------
-    Delete node associated with key
--------------------------------------*/
-
-template <class T>
-void rbt<T>::deleteKey(int key){/* To Do */}
-
 
 /*-----------------------------------
   Change colors of nodes by RBT properties

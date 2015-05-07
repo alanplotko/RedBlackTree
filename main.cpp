@@ -47,7 +47,24 @@ int main()
         }
     }
 
-    std::vector<std::pair<int, int> > vct = tree.treeToSortedArray();
+    /*------------------------
+        Delete Key Tests
+    --------------------------*/
+
+    std::clog << std::endl;
+
+    tree.inorder();
+    std::clog << std::endl;
+    
+    tree.deleteKey(3);
+    
+    tree.inorder();
+
+    /*------------------------
+        Sorted Array Tests
+    --------------------------*/
+
+    /*std::vector<std::pair<int, int> > vct = tree.treeToSortedArray();
     unsigned int treeSize = tree.getSize();
     for(int i = 0; i < treeSize; i++)
     {
@@ -57,7 +74,7 @@ int main()
     vct.push_back(std::make_pair(15, 15));
 
     rbt<int> newTree = tree.sortedArrayToTree(vct);
-    newTree.inorder();
+    newTree.inorder();*/
 
     return 0;
 }
