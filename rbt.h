@@ -28,10 +28,10 @@ class rbt
         
         //Color helper functions
         void childCheck(node<T> *nd);
-        void leftLeft(node<T> *grandPa, node<T> *dad);
-        void leftRight(node<T> *grandPa, node<T> *dad);
-        void rightRight(node<T> *grandPa, node<T> *dad);
-        void rightLeft(node<T> *grandPa, node<T> *dad);
+        void leftLeft(node<T> *curNd, node<T> *grandPa, node<T> *dad);
+        void leftRight(node<T> *curNd, node<T> *grandPa, node<T> *dad);
+        void rightRight(node<T> *curNd, node<T> *grandPa, node<T> *dad);
+        void rightLeft(node<T> *curNd, node<T> *grandPa, node<T> *dad);
     private:
         node<T> *root;
         void insert(node<T> *nd, std::pair<int, T> item);
