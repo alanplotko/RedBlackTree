@@ -4,12 +4,13 @@
 #include "node.h"
 #include <iostream>
 #include <utility>
+#include <vector>
 
 template <class T>
 class rbt
 {
     public:
-        rbt():root(nullptr){}
+        rbt():root(nullptr),size(0){}
         ~rbt();
         void insert(std::pair<int, T> item);
         //friend std::ostream& operator<<(std::ostream &out, rbt &willow);
@@ -20,13 +21,17 @@ class rbt
         node<T>* search(int key);
         void inorder();
         void printBreadthFirst();
-        rbt* sortedArray(std::pair<int, T> items[]);
+        rbt<T> sortedArrayToTree(std::vector<std::pair<int, T> > items);
+        std::vector<std::pair<int, T> > treeToSortedArray();
+        int getSize();
         void deleteKey(int key);
         void inOrderColor();
         void childCheck(node<T> *nd);
         void pathCheck(node<T> *nd);
     private:
         node<T> *root;
+        int size;
+        std::vector<std::pair<int, T> > items;
         void insert(node<T> *nd, std::pair<int, T> item);
         node<T>* search(int key, node<T> *nd);
         void inorder(node<T> *nd);

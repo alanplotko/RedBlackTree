@@ -12,9 +12,9 @@ int main()
 
     for(auto itr : nums)
     {
-        tree.inorder();
-        std::clog << "\nInserting " << itr << ", in order print: " << std::endl;
         tree.insert(std::make_pair(itr, itr));
+        std::clog << "\nInserting " << itr << ", in order print: " << std::endl;
+        tree.inorder();
     }
 
     tree.inorder();
@@ -46,6 +46,18 @@ int main()
             std::clog << "not found!" << std::endl;
         }
     }
+
+    std::vector<std::pair<int, int> > vct = tree.treeToSortedArray();
+    unsigned int treeSize = tree.getSize();
+    for(int i = 0; i < treeSize; i++)
+    {
+        std::clog << vct[i].second << std::endl;
+    }
+
+    vct.push_back(std::make_pair(15, 15));
+
+    rbt<int> newTree = tree.sortedArrayToTree(vct);
+    newTree.inorder();
 
     return 0;
 }

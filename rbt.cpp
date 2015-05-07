@@ -1,5 +1,7 @@
 #include "rbt.h"
 #include <queue>
+#include <vector>
+#include <algorithm>
 
 /*-----------------------------------
     RBT tree destructor starting
@@ -47,6 +49,8 @@ void rbt<T>::insert(std::pair<int, T> item)
     {
         insert(root, item);
     }
+    this->size++;
+    this->items.push_back(item);
 }
 
 /*-----------------------------------
@@ -83,7 +87,8 @@ void rbt<T>::insert(node<T> *nd, std::pair<int, T> item)
         }
     }
 
-    inOrderColor();
+    //inOrderColor();
+    
     // Recalculate heights
     maxHeight(nd);
 
@@ -348,24 +353,35 @@ void rbt<T>::printBreadthFirst()
     std::cout << std::endl;
 }
 
+/*--------------------------
+    Return size of tree
+----------------------------*/
+
+template <class T>
+int rbt<T>::getSize() { return this->size; }
+
 /*-----------------------------------
-    Turn sorted array into RBT
+    Turn sorted array into RBT, vice-versa
 -------------------------------------*/
 
 template <class T>
-rbt<T>* rbt<T>::sortedArray(std::pair<int, T> items[])
+rbt<T> rbt<T>::sortedArrayToTree(std::vector<std::pair<int, T> > items)
 {
-    /*  Note: Are we inserting elements in the sorted
-        array to the RBT or are we extracting elements
-        from the RBT and returning a sorted array? */
-
-    /*rbt<T> tree;
+    rbt<T> tree;
     unsigned int size = items.size();
     for(int i = 0; i < size; i++)
     {
         tree.insert(items[i]);
     }
-    return tree;*/
+    return tree;
+}
+
+template <class T>
+std::vector<std::pair<int, T> > rbt<T>::treeToSortedArray() {
+    std::clog << "this->size: " << this->size << std::endl;
+    std::clog << "vct size: " << this->items.size() << std::endl;
+    std::sort(this->items.begin(), this->items.end());
+    return this->items;
 }
 
 /*-----------------------------------
@@ -434,7 +450,3 @@ void rbt<T>::childCheck(node<T> *nd)
     }
     
 }
-
-
-
-
