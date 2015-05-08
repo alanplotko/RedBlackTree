@@ -10,14 +10,19 @@ int main()
     rbt<int> tree;
     std::vector<int> nums = { 7, 3, 9, -3, 10 };
 
-    for(auto itr : nums)
+    /*for(auto itr : nums)
     {
-        tree.inorder();
-        std::clog << "\nInserting " << itr << ", in order print: " << std::endl;
         tree.insert(std::make_pair(itr, itr));
-    }
+        std::clog << "\nInserting " << itr << ", in order print: " << std::endl;
+        tree.inorder();  
+    }*/
 
+    tree.insert(std::make_pair(2, 2));
+    tree.insert(std::make_pair(1, 1));
+    tree.insert(std::make_pair(7, 7));
+    tree.insert(std::make_pair(8, 8));
     tree.inorder();
+
 
     std::clog << std::endl;
 

@@ -41,6 +41,7 @@ void rbt<T>::insert(std::pair<int, T> item)
     {
         node<T> *nd = new node<T>(item);
         root = nd;
+        root -> color = BLACK;
         // DEBUG: // std::cout << nd->data.first << ", Height: " << nd->height << ", Bfactor: " << this->balanceFactor(nd) << std::endl;
     }
     else
@@ -56,11 +57,11 @@ void rbt<T>::insert(std::pair<int, T> item)
 template <class T>
 void rbt<T>::insert(node<T> *nd, std::pair<int, T> item)
 {
+    node<T>* newNode = new node<T>(item);
     if(item.first > nd->data.first)
     {
         if(nd->right == nullptr)
         {
-            node<T>* newNode = new node<T>(item);
             nd->right = newNode;
             newNode->parent = nd;
         }
@@ -73,7 +74,6 @@ void rbt<T>::insert(node<T> *nd, std::pair<int, T> item)
     {
         if(nd->left == nullptr)
         {
-            node<T> *newNode = new node<T>(item);
             nd->left = newNode;
             newNode->parent = nd;
         }
@@ -82,43 +82,7 @@ void rbt<T>::insert(node<T> *nd, std::pair<int, T> item)
             insert(nd->left, item);
         }
     }
-
-    inOrderColor();
-    // Recalculate heights
-    maxHeight(nd);
-
-    int bfactor = this->balanceFactor(nd);
-
-    // DEBUG: // std::cout << nd->data << ", Height: " << nd->height << ", Bfactor: " << bfactor << std::endl;
-
-    if(bfactor == -2)
-    {
-        if(this->balanceFactor(nd->left) == -1)
-        {
-            // DEBUG: // std::cout << "Rotating right" << std::endl;
-            this->rotateRight(nd);
-        }
-        else
-        {
-            // DEBUG: // std::cout << "Rotating left, right" << std::endl;
-            this->rotateLeft(nd->left);
-            this->rotateRight(nd);
-        }
-    }
-    else if(bfactor == 2)
-    {
-        if(this->balanceFactor(nd->right) == 1)
-        {
-            // DEBUG: // std::cout << "Rotating left" << std::endl;
-            this->rotateLeft(nd);
-        }
-        else
-        {
-            // DEBUG: // std::cout << "Rotating right, left" << std::endl;
-            this->rotateRight(nd->right);
-            this->rotateLeft(nd);
-        }
-    }
+    childCheck(newNode);
 }
 
 /*-----------------------------------
@@ -379,60 +343,148 @@ void rbt<T>::deleteKey(int key){/* To Do */}
 /*-----------------------------------
   Change colors of nodes by RBT properties
 -------------------------------------*/
-template <class T>
+/*template <class T>
 void rbt<T>::inOrderColor()
 {
     if(root == nullptr)
         {return;}
-    root -> color = BLACK;
     inOrderColor(root);
-}
+}*/
 
 /*-----------------------------------
   Recursive inOrderColor
 -------------------------------------*/
 
-template <class T>
+/*template <class T>
 void rbt<T>::inOrderColor(node<T> *nd)
 {
     if(nd == nullptr) return;
     inOrderColor(nd->left);
-    //childCheck(nd);
-    //pathCheck(nd);
+    childCheck(nd);
+    
     inOrderColor(nd->right);
     
-}
+}*/
 
 /*-----------------------------------
-  Makes sure red nodes children are black
+  Makes sure colors are correct
 -------------------------------------*/
 template <class T>
-void rbt<T>::childCheck(node<T> *nd) 
-{   node<T> *grandPa = nd -> parent -> parent;
-    if(nd != root || nd -> parent -> color != BLACK)
+  void rbt<T>::childCheck(node<T> *nd) 
+  {   
+    if(nd != root && nd -> parent -> color == RED)
     {
-        if(grandPa -> left == nd)
+        if(nd -> parent -> parent != nullptr)
         {
-            if(grandPa -> right -> color == RED)
-            {
-                nd -> parent -> color = BLACK;
-                grandPa -> right -> color = BLACK;
-            }
 
-        }
-        else
-        {
-            if(grandPa -> left -> color == RED)
+            node<T> *grandPa = nd -> parent -> parent;
+            node<T> *dad = nd -> parent;
+            if(grandPa -> left  == dad)
             {
-                nd -> parent -> color = BLACK;
-                grandPa -> left -> color = BLACK;
+            // if uncle red 
+                if(grandPa -> right -> color == RED)
+                {
+                    nd -> parent -> color = BLACK;
+                    grandPa -> right -> color = BLACK;
+                    grandPa -> color = RED;
+                    nd = grandPa;
+                    childCheck(nd);
+                }
             }
-
-        }
-        grandPa -> color = RED;
-        
+            else if(grandPa -> right  == dad)
+            {
+            // if uncle red 
+                if(grandPa -> left -> color == RED)
+                {
+                    nd -> parent -> color = BLACK;
+                    grandPa -> left -> color = BLACK;
+                    grandPa -> color = RED;
+                    nd = grandPa;
+                    childCheck(nd);
+                }
+            }
+             // if uncle black
+            else
+            {
+                if(dad -> left == nd && grandPa -> left  == dad)
+                {
+                    leftLeft(nd, grandPa, dad);  
+                }
+                if(dad -> right == nd && grandPa -> left  == dad)
+                {
+                    leftRight(nd, grandPa, dad);
+                }
+                if(dad -> right == nd && grandPa -> right  == dad)
+                {
+                    rightRight(nd, grandPa, dad);  
+                }
+                if(dad -> left == nd && grandPa -> right  == dad)
+                {
+                    rightLeft(nd, grandPa, dad);
+                }
+            }
+        }  
     }
-    
+root -> color = BLACK;
+}
+
+
+/*-----------------------------------
+  Four cases for uncle node is black
+-------------------------------------*/
+
+/*---------------------------------------------------------
+  I. nd's parent is left nd's grandPa and nd is left parent
+---------------------------------------------------------*/
+template <class T>
+void rbt<T>::leftLeft(node<T> *curNd, node<T> *grandPa, node<T> *dad)
+{
+    node<T> *temp = grandPa;
+    grandPa -> color = dad -> color;
+    dad -> color = temp ->color;
+    rotateRight(grandPa);
+}
+
+/*---------------------------------------------------------
+  II. nd's parent is left nd's grandPa and nd is right parent
+---------------------------------------------------------*/
+
+template <class T>
+void rbt<T>::leftRight(node<T> *curNd, node<T> *grandPa, node<T> *dad)
+{
+    node<T> *temp = curNd;
+    curNd -> color = grandPa -> color;
+    grandPa -> color = temp ->color;
+    rotateLeft(dad);
+    rotateRight(grandPa);
+}
+
+/*---------------------------------------------------------
+  III. nd's parent is right nd's grandPa and nd is right parent
+---------------------------------------------------------*/
+
+template <class T>
+void rbt<T>::rightRight(node<T> *curNd, node<T> *grandPa, node<T> *dad)
+
+{
+    node<T> *temp = dad;
+    dad -> color = grandPa -> color;
+    grandPa -> color = temp ->color; 
+    rotateLeft(grandPa); 
+}
+
+/*---------------------------------------------------------
+  IV. nd's parent is right nd's grandPa and nd is left parent
+---------------------------------------------------------*/
+
+template <class T>
+void rbt<T>::rightLeft(node<T> *curNd, node<T> *grandPa, node<T> *dad)
+{
+    node<T> *temp = curNd;
+    curNd -> color = grandPa -> color;
+    grandPa -> color = temp ->color;
+    rotateRight(dad);
+    rotateLeft(grandPa);
 }
 
 
