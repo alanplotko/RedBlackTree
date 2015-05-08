@@ -428,15 +428,53 @@ template <class T>
 int rbt<T>::getSize() { return this->size; }
 
 /*--------------------------
-    Get leftmost node
+    Get next node
 ----------------------------*/
 
 template <class T>
-node<T>* rbt<T>::leftmostNode(node<T> *nd)
+node<T>* rbt<T>::getNextNode(node<T> *nd)
 {
     node<T> *current = nd;
-    while(current->left != nullptr) current = current->left;
-    return current;
+    node<T> *tmp = nd;
+
+    if(current->right != nullptr)
+    {
+        while(current->left != nullptr)
+        {
+            current = current->left;
+        }
+        return current;
+    }
+    
+    current = current->parent;
+
+    while(current != nullptr && tmp == current->right)
+    {
+        tmp = current;
+        current = current->parent;
+    }
+
+    /*if(nd == nullptr) return nd;
+
+    node<T> *current = nd;
+
+    if(nd->right != nullptr)
+    {
+        current = nd->right;
+        while(current->right != nullptr)
+        {
+            current = current->right;
+        }
+        return current;
+    }
+
+    current = nd->parent;
+    while(current != nullptr && nd == current->right)
+    {
+        nd = current;
+        current = current->parent;
+    }
+    return current;*/
 }
 
 /*-------------------------------------
@@ -446,19 +484,21 @@ node<T>* rbt<T>::leftmostNode(node<T> *nd)
 template <class T>
 void rbt<T>::deleteKey(int key)
 {
+    node<T> *result = search(key);
+
     // Perhaps return boolean for QT use?
-    if(search(key) == nullptr)
+    if(result == nullptr)
     {
         std::cout << "Cannot delete non-existent key " << key << std::endl;
         return;
     }
-    root = deleteKey(root, key);
+    root = deleteKey(result);
 }
 
 template <class T>
-node<T>* rbt<T>::deleteKey(node<T> *nd, int key)
+node<T>* rbt<T>::deleteKey(node<T> *nd)
 {
-/*    node<T> *tmpA, *tmpB;
+    /*node<T> *tmpA, *tmpB;
 
     if(nd->left == nullptr || nd->right == nullptr)
     {
@@ -466,11 +506,13 @@ node<T>* rbt<T>::deleteKey(node<T> *nd, int key)
     }
     else
     {
-        tmpA = leftmostNode(nd->right);
+        tmpA = getNextNode(nd);
+        // DEBUG: // std::clog << "Next node: " << tmpA->data.first << ", " << tmpA->data.second << std::endl;
     }
 
     if(tmpA->left != nullptr)
     {
+        // DEBUG: // std::clog << "tmpA->left: " << tmpA->left->data.first << ", " << tmpA->left->data.second << std::endl;
         tmpB = tmpA->left;
     }
     else
@@ -478,14 +520,18 @@ node<T>* rbt<T>::deleteKey(node<T> *nd, int key)
         tmpB = tmpA->right;
     }
 
-    if(tmpB == nullptr) tmpB->parent = tmpA->parent;
+    if(tmpB != nullptr)
+    {
+        tmpB->parent = tmpA->parent;
+    }
 
     if(tmpA->parent == nullptr)
     {
         root = tmpB;
     }
-    else if(tmpA = tmpA->parent->left)
+    else if(tmpA->parent != nullptr && tmpA == tmpA->parent->left)
     {
+        // DEBUG: // std::clog << "tmpA->parent: " << tmpA->parent->data.first << ", " << tmpA->parent->data.second << std::endl;
         tmpA->parent->left = tmpB;
     }
     else
@@ -496,10 +542,10 @@ node<T>* rbt<T>::deleteKey(node<T> *nd, int key)
     if(tmpA != nd)
     {
         nd->data = tmpA->data;
-        //nd->color = tmpA->color;
     }
-
-    if(tmpA->color == BLACK && tmpB != nullptr)
+    
+    // DEBUG: // std::clog << tmpA->color << std::endl;
+    if(getColor(tmpA) == BLACK && tmpB != nullptr)
     {
         deleteRecolor(tmpB);
     }
@@ -540,7 +586,7 @@ node<T>* rbt<T>::deleteKey(node<T> *nd, int key)
         }
     
         // Node has 2 children: get next node in order
-        tmp = leftmostNode(nd->right);
+        tmp = getNextNode(nd->right);
 
         // Copy the next inorder node data into the current node data
         nd->data = tmp->data;
@@ -555,15 +601,22 @@ node<T>* rbt<T>::deleteKey(node<T> *nd, int key)
 }
 
 template <class T>
+type rbt<T>::getColor(node<T> *nd)
+{
+    if(nd == nullptr) return BLACK;
+    return nd->color;
+}
+
+template <class T>
 void rbt<T>::deleteRecolor(node<T> *nd)
 {
-    while(nd != root && nd->color == BLACK)
+    while(nd != root && getColor(nd) == BLACK)
     {
         if(nd == nd->parent->left)
         {
             node<T> *sibling = nd->parent->right;
             
-            if(sibling->color == RED)
+            if(getColor(sibling) == RED)
             {
                 sibling->color = BLACK;
                 sibling->parent->color = RED;
@@ -571,14 +624,14 @@ void rbt<T>::deleteRecolor(node<T> *nd)
                 sibling = nd->parent->right;
             }
             
-            if(sibling->left->color == BLACK && sibling->right->color == BLACK)
+            if(getColor(sibling->left) == BLACK && getColor(sibling->right) == BLACK)
             {
                 sibling->color = RED;
                 nd = nd->parent;
             }
             else
             {
-                if(sibling->right->color == BLACK)
+                if(getColor(sibling->right) == BLACK)
                 {
                     sibling->left->color = BLACK;
                     sibling->color = RED;
@@ -587,7 +640,10 @@ void rbt<T>::deleteRecolor(node<T> *nd)
                 }
                 sibling->color = nd->parent->color;
                 nd->parent->color = BLACK;
-                sibling->right->color = BLACK;
+                if(sibling->right != nullptr)
+                {
+                    sibling->right->color = BLACK;
+                }
                 rotateLeft(nd->parent);
                 nd = root;
             }
@@ -596,7 +652,7 @@ void rbt<T>::deleteRecolor(node<T> *nd)
         {
             node<T> *sibling = nd->parent->left;
 
-            if(sibling->color == RED)
+            if(getColor(sibling) == RED)
             {
                 sibling->color = BLACK;
                 nd->parent->color = RED;
@@ -604,14 +660,14 @@ void rbt<T>::deleteRecolor(node<T> *nd)
                 sibling = nd->parent->left;
             }
     
-            if(sibling->left->color == BLACK && sibling->right->color == BLACK)
+            if(getColor(sibling->left) == BLACK && getColor(sibling->right) == BLACK)
             {
                 sibling->color = RED;
                 nd = nd->parent;
             }
             else
             {
-                if(sibling->left->color == BLACK)
+                if(getColor(sibling->left) == BLACK)
                 {
                     sibling->right->color = BLACK;
                     sibling->color = RED;
@@ -620,7 +676,10 @@ void rbt<T>::deleteRecolor(node<T> *nd)
                 }
                 sibling->color = nd->parent->color;
                 nd->parent->color = BLACK;
-                sibling->left->color = BLACK;
+                if(sibling->left != nullptr)
+                {
+                    sibling->left->color = BLACK;
+                }
                 rotateRight(nd->parent);
                 nd = root;
             }

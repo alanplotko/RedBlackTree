@@ -8,18 +8,18 @@ int main()
     -----------------------------------*/
 
     rbt<int> tree;
-    std::vector<int> nums = { 7, 8, 9 };
+    std::vector<int> nums = { 7, 3, 9, 8, 10 };
 
     for(auto itr : nums)
     {
         tree.insert(std::make_pair(itr, itr));
         std::clog << "\nInserting " << itr << ", in order print: " << std::endl;
-        tree.inorder();
+        tree.printBreadthFirst();
     }
 
     std::clog << "\nFinal in order print: " << std::endl;
 
-    tree.inorder();
+    tree.printBreadthFirst();
 
     std::clog << std::endl;
 
@@ -33,7 +33,7 @@ int main()
     nums.insert(nums.begin(), 2);
     nums.insert(nums.begin(), 5);
 
-    for(auto itr : nums)
+    for(auto itr : nums)    
     {
         std::clog << "Searching for " << itr;
         if(itr >= 0 && itr < 10) std::clog << "\t";
@@ -57,15 +57,15 @@ int main()
 
     tree.printBreadthFirst();
 
-    std::clog << "\nDeleting 9:\n" << std::endl;
+    std::clog << "\nDeleting 7:\n" << std::endl;
     
-    tree.deleteKey(9);
+    tree.deleteKey(7);
 
     tree.printBreadthFirst();
     
     std::clog << "\nDeleting -3:\n" << std::endl;
 
-    tree.deleteKey(8);
+    tree.deleteKey(100);
     
     tree.printBreadthFirst();
 
