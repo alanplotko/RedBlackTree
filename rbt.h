@@ -25,6 +25,8 @@ class rbt
         std::vector<std::pair<int, T> > treeToSortedArray();
         node<T>* leftmostNode(node<T> *nd);
         void deleteKey(int key);
+        void insertRecolor(node<T> *nd);
+        void deleteRecolor(node<T> *nd);
         int getSize();
         void inOrderColor();
         void childCheck(node<T> *nd);

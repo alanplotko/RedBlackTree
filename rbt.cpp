@@ -43,6 +43,7 @@ void rbt<T>::insert(std::pair<int, T> item)
     {
         node<T> *nd = new node<T>(item);
         root = nd;
+        root->color = BLACK;
         // DEBUG: // std::cout << nd->data.first << ", Height: " << nd->height << ", Bfactor: " << this->balanceFactor(nd) << std::endl;
     }
     else
@@ -60,11 +61,13 @@ void rbt<T>::insert(std::pair<int, T> item)
 template <class T>
 void rbt<T>::insert(node<T> *nd, std::pair<int, T> item)
 {
+    node<T>* newNode;
+
     if(item.first > nd->data.first)
     {
         if(nd->right == nullptr)
         {
-            node<T>* newNode = new node<T>(item);
+            newNode = new node<T>(item);
             nd->right = newNode;
             newNode->parent = nd;
         }
@@ -77,7 +80,7 @@ void rbt<T>::insert(node<T> *nd, std::pair<int, T> item)
     {
         if(nd->left == nullptr)
         {
-            node<T> *newNode = new node<T>(item);
+            newNode = new node<T>(item);
             nd->left = newNode;
             newNode->parent = nd;
         }
@@ -87,10 +90,12 @@ void rbt<T>::insert(node<T> *nd, std::pair<int, T> item)
         }
     }
 
+    insertRecolor(newNode);
+
     //inOrderColor();
     
     // Recalculate heights
-    maxHeight(nd);
+    /*maxHeight(nd);
 
     int bfactor = this->balanceFactor(nd);
 
@@ -123,7 +128,69 @@ void rbt<T>::insert(node<T> *nd, std::pair<int, T> item)
             this->rotateRight(nd->right);
             this->rotateLeft(nd);
         }
+    }*/
+}
+
+template <class T>
+void rbt<T>::insertRecolor(node<T> *nd)
+{
+    while(nd != root && nd->parent->color == RED)
+    {
+        // DEBUG: // std::clog << "Attempting to insert recolor " << nd->data.first << std::endl;
+        if(nd->parent->parent == nullptr) return;
+        if(nd->parent == nd->parent->parent->left)
+        {
+            // DEBUG: // std::clog << nd->data.first << " is on left" << std::endl;
+            node<T> *uncle = nd->parent->parent->right;
+            // DEBUG: // std::clog << "Uncle: " << uncle->data.first;
+            if(uncle != nullptr && uncle->color == RED)
+            {
+                // DEBUG: // std::clog << ", color: red" << std::endl;
+                nd->parent->color = BLACK;
+                uncle->color = BLACK;
+                nd->parent->parent->color = RED;
+                // DEBUG: // std::clog << "Grandpa: " << nd->parent->parent->data.first << std::endl;
+                nd = nd->parent->parent;
+            }
+            else
+            {
+                // DEBUG: // std::clog << ", color: black" << std::endl;
+                if(nd == nd->parent->right)
+                {
+                    nd = nd->parent;
+                    rotateLeft(nd);
+                }
+                nd->parent->color = BLACK;
+                // DEBUG: // std::clog << "Grandpa: " << nd->parent->parent->data.first << std::endl;
+                nd->parent->parent->color = RED;
+                rotateRight(nd->parent->parent);
+            }
+        }
+        else {
+            // DEBUG: // std::clog << nd->data.first << " is on right" << std::endl;
+            node<T> *uncle = nd->parent->parent->left;
+            // DEBUG: // std::clog << "Uncle: " << uncle->data.first << std::endl;
+            if(uncle != nullptr && uncle->color == RED)
+            {
+                nd->parent->color = BLACK;
+                uncle->color = BLACK;
+                nd->parent->parent->color = RED;
+                nd = nd->parent->parent;
+            }
+            else
+            {
+                if(nd == nd->parent->left)
+                {
+                    nd = nd->parent;
+                    rotateRight(nd);
+                }
+                nd->parent->color = BLACK;
+                nd->parent->parent->color = RED;
+                rotateLeft(nd->parent->parent);
+            }
+        }
     }
+    root->color = BLACK;
 }
 
 /*-----------------------------------
@@ -347,7 +414,7 @@ void rbt<T>::printBreadthFirst()
         {
             nodeSet.push(front->right);
         }
-        std::cout << front->data.first << ": " << front->data.second << std::endl;
+        std::cout << front->data.first << ": " << front->color << std::endl;
         nodeSet.pop();
     }
     std::cout << std::endl;
@@ -379,13 +446,69 @@ node<T>* rbt<T>::leftmostNode(node<T> *nd)
 template <class T>
 void rbt<T>::deleteKey(int key)
 {
+    // Perhaps return boolean for QT use?
+    if(search(key) == nullptr)
+    {
+        std::cout << "Cannot delete non-existent key " << key << std::endl;
+        return;
+    }
     root = deleteKey(root, key);
 }
 
 template <class T>
 node<T>* rbt<T>::deleteKey(node<T> *nd, int key)
 {
+/*    node<T> *tmpA, *tmpB;
+
+    if(nd->left == nullptr || nd->right == nullptr)
+    {
+        tmpA = nd;
+    }
+    else
+    {
+        tmpA = leftmostNode(nd->right);
+    }
+
+    if(tmpA->left != nullptr)
+    {
+        tmpB = tmpA->left;
+    }
+    else
+    {
+        tmpB = tmpA->right;
+    }
+
+    if(tmpB == nullptr) tmpB->parent = tmpA->parent;
+
+    if(tmpA->parent == nullptr)
+    {
+        root = tmpB;
+    }
+    else if(tmpA = tmpA->parent->left)
+    {
+        tmpA->parent->left = tmpB;
+    }
+    else
+    {
+        tmpA->parent->right = tmpB;
+    }
+
+    if(tmpA != nd)
+    {
+        nd->data = tmpA->data;
+        //nd->color = tmpA->color;
+    }
+
+    if(tmpA->color == BLACK && tmpB != nullptr)
+    {
+        deleteRecolor(tmpB);
+    }
+
+    return tmpA;*/
+
     if(nd == nullptr) return nd;
+
+    node<T> *tmp;
 
     // Key for deletion < node's key
     if(key < nd->data.first)
@@ -405,27 +528,105 @@ node<T>* rbt<T>::deleteKey(node<T> *nd, int key)
         // Node has <= 1 child
         if(nd->left == nullptr)
         {
-            node<T> *tmp = nd->right;
+            tmp = nd->right;
             delete nd;
             return tmp;
         }
         else if(nd->right == nullptr)
         {
-            node<T> *tmp = nd->left;
+            tmp = nd->left;
             delete nd;
             return tmp;
         }
- 
+    
         // Node has 2 children: get next node in order
-        node<T> *tmp = leftmostNode(nd->right);
- 
+        tmp = leftmostNode(nd->right);
+
         // Copy the next inorder node data into the current node data
         nd->data = tmp->data;
  
         // Delete the next inorder node
         nd->right = deleteKey(nd->right, tmp->data.first);
     }
+
+    if(tmp->color == BLACK) deleteRecolor(nd);
+
     return nd;
+}
+
+template <class T>
+void rbt<T>::deleteRecolor(node<T> *nd)
+{
+    while(nd != root && nd->color == BLACK)
+    {
+        if(nd == nd->parent->left)
+        {
+            node<T> *sibling = nd->parent->right;
+            
+            if(sibling->color == RED)
+            {
+                sibling->color = BLACK;
+                sibling->parent->color = RED;
+                rotateLeft(nd->parent);
+                sibling = nd->parent->right;
+            }
+            
+            if(sibling->left->color == BLACK && sibling->right->color == BLACK)
+            {
+                sibling->color = RED;
+                nd = nd->parent;
+            }
+            else
+            {
+                if(sibling->right->color == BLACK)
+                {
+                    sibling->left->color = BLACK;
+                    sibling->color = RED;
+                    rotateRight(sibling);
+                    sibling = nd->parent->right;
+                }
+                sibling->color = nd->parent->color;
+                nd->parent->color = BLACK;
+                sibling->right->color = BLACK;
+                rotateLeft(nd->parent);
+                nd = root;
+            }
+        }
+        else
+        {
+            node<T> *sibling = nd->parent->left;
+
+            if(sibling->color == RED)
+            {
+                sibling->color = BLACK;
+                nd->parent->color = RED;
+                rotateRight(nd->parent);
+                sibling = nd->parent->left;
+            }
+    
+            if(sibling->left->color == BLACK && sibling->right->color == BLACK)
+            {
+                sibling->color = RED;
+                nd = nd->parent;
+            }
+            else
+            {
+                if(sibling->left->color == BLACK)
+                {
+                    sibling->right->color = BLACK;
+                    sibling->color = RED;
+                    rotateLeft(sibling);
+                    sibling = nd->parent->left;
+                }
+                sibling->color = nd->parent->color;
+                nd->parent->color = BLACK;
+                sibling->left->color = BLACK;
+                rotateRight(nd->parent);
+                nd = root;
+            }
+        }
+    }
+    nd->color = BLACK;
 }
 
 /*-----------------------------------
