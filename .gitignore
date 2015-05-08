@@ -1,6 +1,9 @@
 # Ignore the main file
 main
 
+# Ignore Qt Build Folder
+/build-*
+
 # Compiled Object files
 *.slo
 *.lo
