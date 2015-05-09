@@ -31,9 +31,6 @@ class rbt
         void deleteRecolor(node<T> *nd);
         type getColor(node<T> *nd);
         int getSize();
-        void inOrderColor();
-        void childCheck(node<T> *nd);
-        void pathCheck(node<T> *nd);
     private:
         node<T> *root;
         int size;

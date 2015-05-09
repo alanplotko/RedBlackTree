@@ -13,11 +13,11 @@ int main()
     for(auto itr : nums)
     {
         tree.insert(std::make_pair(itr, itr));
-        std::clog << "\nInserting " << itr << ", in order print: " << std::endl;
+        std::clog << "\nInserting " << itr << ", print: " << std::endl;
         tree.printBreadthFirst();
     }
 
-    std::clog << "\nFinal in order print: " << std::endl;
+    std::clog << "\nFinal print: " << std::endl;
 
     tree.printBreadthFirst();
 
@@ -78,6 +78,12 @@ int main()
     std::clog << "\nDeleting 9:\n" << std::endl;
 
     tree.deleteKey(9);
+    
+    tree.printBreadthFirst();
+
+    std::clog << "\nDeleting 10:\n" << std::endl;
+
+    tree.deleteKey(10);
     
     tree.printBreadthFirst();
 

@@ -62,7 +62,6 @@ template <class T>
 void rbt<T>::insert(node<T> *nd, std::pair<int, T> item)
 {
     node<T>* newNode;
-
     if(item.first > nd->data.first)
     {
         if(nd->right == nullptr)
@@ -727,63 +726,4 @@ std::vector<std::pair<int, T> > rbt<T>::treeToSortedArray() {
     std::clog << "vct size: " << this->items.size() << std::endl;
     std::sort(this->items.begin(), this->items.end());
     return this->items;
-}
-
-/*-----------------------------------
-  Change colors of nodes by RBT properties
--------------------------------------*/
-template <class T>
-void rbt<T>::inOrderColor()
-{
-    if(root == nullptr)
-        {return;}
-    root -> color = BLACK;
-    inOrderColor(root);
-}
-
-/*-----------------------------------
-  Recursive inOrderColor
--------------------------------------*/
-
-template <class T>
-void rbt<T>::inOrderColor(node<T> *nd)
-{
-    if(nd == nullptr) return;
-    inOrderColor(nd->left);
-    //childCheck(nd);
-    //pathCheck(nd);
-    inOrderColor(nd->right);
-    
-}
-
-/*-----------------------------------
-  Makes sure red nodes children are black
--------------------------------------*/
-template <class T>
-void rbt<T>::childCheck(node<T> *nd) 
-{   node<T> *grandPa = nd -> parent -> parent;
-    if(nd != root || nd -> parent -> color != BLACK)
-    {
-        if(grandPa -> left == nd)
-        {
-            if(grandPa -> right -> color == RED)
-            {
-                nd -> parent -> color = BLACK;
-                grandPa -> right -> color = BLACK;
-            }
-
-        }
-        else
-        {
-            if(grandPa -> left -> color == RED)
-            {
-                nd -> parent -> color = BLACK;
-                grandPa -> left -> color = BLACK;
-            }
-
-        }
-        grandPa -> color = RED;
-        
-    }
-    
 }
