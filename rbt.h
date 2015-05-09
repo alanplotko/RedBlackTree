@@ -10,37 +10,59 @@ template <class T>
 class rbt
 {
     public:
+
         rbt():root(nullptr),size(0){}
         ~rbt();
-        void insert(std::pair<int, T> item);
-        //friend std::ostream& operator<<(std::ostream &out, rbt &willow);
-        int balanceFactor(node<T> *nd);
-        void maxHeight(node<T> *nd);
+
+        // Tree rotations
         void rotateLeft(node<T> *nd);
         void rotateRight(node<T> *nd);
+
+        // Tree restructuring
+        int balanceFactor(node<T> *nd);
+        void maxHeight(node<T> *nd);
+
+        // Tree recoloring
+        void insertRecolor(node<T> *nd);
+        void deleteRecolor(node<T> *nd);
+
+        // Tree data manipulations
+        void insert(std::pair<int, T> item);
         node<T>* search(int key);
+        bool deleteKey(int key);
+
+        // Tree conversions: to/from a sorted vector
+        rbt<T> sortedVectorToTree(std::vector<std::pair<int, T> > items);
+        std::vector<std::pair<int, T> > treeToSortedVector();
+        
+        // Tree traversal
         void inorder();
         void printBreadthFirst();
-        rbt<T> sortedArrayToTree(std::vector<std::pair<int, T> > items);
-        std::vector<std::pair<int, T> > treeToSortedArray();
+
+        // Tree helper functions
         node<T>* getNextNode(node<T> *nd);
         node<T>* getSmallestNode(node<T> *nd);
         node<T>* getLargestNode(node<T> *nd);
-        void deleteKey(int key);
-        void insertRecolor(node<T> *nd);
-        void deleteRecolor(node<T> *nd);
         type getColor(node<T> *nd);
         int getSize();
+
     private:
+
+        // Tree variables
         node<T> *root;
         int size;
         std::vector<std::pair<int, T> > items;
+
+        // Tree data manipulation functions
         void insert(node<T> *nd, std::pair<int, T> item);
-        void deleteKey(node<T> *nd);
         node<T>* search(int key, node<T> *nd);
+        void deleteKey(node<T> *nd);
+        
+        // Tree traversal
         void inorder(node<T> *nd);
+
+        // Tree destructor helper
         void cleanRbt(node<T> *nd);
-        void inOrderColor(node<T> *nd);
 };
 
 #include "rbt.cpp"

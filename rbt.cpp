@@ -3,18 +3,16 @@
 #include <vector>
 #include <algorithm>
 
-/*-----------------------------------
-    RBT tree destructor starting
-    at the root node
--------------------------------------*/
+/*-------------------------
+    RBT tree destructor
+---------------------------*/
 
 template <class T>
 rbt<T>::~rbt() { cleanRbt(root); }
 
-/*-----------------------------------
-    Called by the destructor;
-    destroys all nodes in RBT tree
--------------------------------------*/
+/*----------------------------------
+   Destroy all nodes in RBT tree
+------------------------------------*/
 
 template <class T>
 void rbt<T>::cleanRbt(node<T> *nd)
@@ -32,143 +30,116 @@ void rbt<T>::cleanRbt(node<T> *nd)
     delete nd;
 }
 
-/*-----------------------------------
-    Insert std::pair into RBT tree
--------------------------------------*/
+/*-------------------------------
+    Insert pair into RBT tree
+---------------------------------*/
 
 template <class T>
 void rbt<T>::insert(std::pair<int, T> item)
 {
+    // Case 1: empty tree, item becomes root
     if(root == nullptr)
     {
         node<T> *nd = new node<T>(item);
         root = nd;
         root->color = BLACK;
-        // DEBUG: // std::cout << nd->data.first << ", Height: " << nd->height << ", Bfactor: " << this->balanceFactor(nd) << std::endl;
     }
+    // Case 2: insert into correct position
     else
     {
         insert(root, item);
     }
+
+    // Keep track of tree size
     this->size++;
+
+    // Keep track of items for sorting
     this->items.push_back(item);
 }
 
-/*-----------------------------------
+/*-------------------------------
     Recursive call for insert
--------------------------------------*/
+---------------------------------*/
 
 template <class T>
 void rbt<T>::insert(node<T> *nd, std::pair<int, T> item)
 {
     node<T>* newNode;
+
+    // Case 1: item weight > current node weight
     if(item.first > nd->data.first)
     {
+        // Case 1a: found open space for insert
         if(nd->right == nullptr)
         {
             newNode = new node<T>(item);
             nd->right = newNode;
             newNode->parent = nd;
         }
+        // Case 1b: current space contains node;
+        //          keep moving to the right
         else
         {
             insert(nd->right, item);
         }
     }
+    // Case 2: item weight < current node weight
     else
     {
+        // Case 2a: found open space for insert
         if(nd->left == nullptr)
         {
             newNode = new node<T>(item);
             nd->left = newNode;
             newNode->parent = nd;
         }
+        // Case 2b: current space contains node;
+        //          keep moving to the left
         else
         {
             insert(nd->left, item);
         }
     }
 
+    // Recolor tree based on new node's properties
     insertRecolor(newNode);
-
-    //inOrderColor();
-    
-    // Recalculate heights
-    /*maxHeight(nd);
-
-    int bfactor = this->balanceFactor(nd);
-
-    // DEBUG: // std::cout << nd->data << ", Height: " << nd->height << ", Bfactor: " << bfactor << std::endl;
-
-    if(bfactor == -2)
-    {
-        if(this->balanceFactor(nd->left) == -1)
-        {
-            // DEBUG: // std::cout << "Rotating right" << std::endl;
-            this->rotateRight(nd);
-        }
-        else
-        {
-            // DEBUG: // std::cout << "Rotating left, right" << std::endl;
-            this->rotateLeft(nd->left);
-            this->rotateRight(nd);
-        }
-    }
-    else if(bfactor == 2)
-    {
-        if(this->balanceFactor(nd->right) == 1)
-        {
-            // DEBUG: // std::cout << "Rotating left" << std::endl;
-            this->rotateLeft(nd);
-        }
-        else
-        {
-            // DEBUG: // std::cout << "Rotating right, left" << std::endl;
-            this->rotateRight(nd->right);
-            this->rotateLeft(nd);
-        }
-    }*/
 }
+
+/*---------------------------------------
+    Examine the newly inserted node's
+    properties and recolor the tree
+-----------------------------------------*/
 
 template <class T>
 void rbt<T>::insertRecolor(node<T> *nd)
 {
     while(nd != root && nd->parent->color == RED)
     {
-        // DEBUG: // std::clog << "Attempting to insert recolor " << nd->data.first << std::endl;
         if(nd->parent->parent == nullptr) return;
         if(nd->parent == nd->parent->parent->left)
         {
-            // DEBUG: // std::clog << nd->data.first << " is on left" << std::endl;
             node<T> *uncle = nd->parent->parent->right;
-            // DEBUG: // std::clog << "Uncle: " << uncle->data.first;
             if(uncle != nullptr && uncle->color == RED)
             {
-                // DEBUG: // std::clog << ", color: red" << std::endl;
                 nd->parent->color = BLACK;
                 uncle->color = BLACK;
                 nd->parent->parent->color = RED;
-                // DEBUG: // std::clog << "Grandpa: " << nd->parent->parent->data.first << std::endl;
                 nd = nd->parent->parent;
             }
             else
             {
-                // DEBUG: // std::clog << ", color: black" << std::endl;
                 if(nd == nd->parent->right)
                 {
                     nd = nd->parent;
                     rotateLeft(nd);
                 }
                 nd->parent->color = BLACK;
-                // DEBUG: // std::clog << "Grandpa: " << nd->parent->parent->data.first << std::endl;
                 nd->parent->parent->color = RED;
                 rotateRight(nd->parent->parent);
             }
         }
         else {
-            // DEBUG: // std::clog << nd->data.first << " is on right" << std::endl;
             node<T> *uncle = nd->parent->parent->left;
-            // DEBUG: // std::clog << "Uncle: " << uncle->data.first << std::endl;
             if(uncle != nullptr && uncle->color == RED)
             {
                 nd->parent->color = BLACK;
@@ -192,9 +163,9 @@ void rbt<T>::insertRecolor(node<T> *nd)
     root->color = BLACK;
 }
 
-/*-----------------------------------
+/*--------------------------------------
     Get balance factor for rotations
--------------------------------------*/
+----------------------------------------*/
 
 template <class T>
 int rbt<T>::balanceFactor(node<T> *nd)
@@ -204,10 +175,10 @@ int rbt<T>::balanceFactor(node<T> *nd)
     return right - left;
 }
 
-/*-----------------------------------
+/*---------------------------------------
     Set node's height to the larger
     height of its child nodes, plus 1
--------------------------------------*/
+-----------------------------------------*/
 
 template <class T>
 void rbt<T>::maxHeight(node<T> *nd)
@@ -218,13 +189,12 @@ void rbt<T>::maxHeight(node<T> *nd)
 }
 
 /*-----------------------------------
-    Rotate RBT tree to the left
+    Left rotation with pivot node
 -------------------------------------*/
 
 template <class T>
 void rbt<T>::rotateLeft(node<T> *nd)
 {
-    // DEBUG: // std::cout << "Working left with " << nd->data.first << std::endl;
     node<T> *tmp = nd->right;
     tmp->parent = nd->parent;
     nd->right = tmp->left;
@@ -258,56 +228,36 @@ void rbt<T>::rotateLeft(node<T> *nd)
     nd = tmp;
 }
 
-/*-----------------------------------
-    Rotate RBT tree to the right
--------------------------------------*/
+/*------------------------------------
+    Right rotation with pivot node
+--------------------------------------*/
 
 template <class T>
 void rbt<T>::rotateRight(node<T> *nd)
 {
-    // DEBUG: // std::cout << "Working right with " << nd->data.first << std::endl;
-
     node<T> *tmp = nd->left;
-
-    // DEBUG: // std::cout << "Set tmp to " << nd->left->data.first << std::endl;
 
     tmp->parent = nd->parent;
 
-    // DEBUG: // T test = (nd->parent == nullptr ? 0 : nd->parent->data.first);
-    // DEBUG: // std::cout << "Set tmp->parent to " << test << std::endl;
-
     nd->left = tmp->right;
-
-    // DEBUG: // std::cout << "Set nd->left to " << tmp->right << std::endl;
 
     if(nd->left != nullptr)
     {
-    // DEBUG: // std::cout << "Set nd->left->parent to " << nd->data.first << std::endl;
-    nd->left->parent = nd;
+        nd->left->parent = nd;
     }
 
     tmp->right = nd;
-
-    // DEBUG: // std::cout << "Set tmp->right to " << nd->data.first << std::endl;
-
     nd->parent = tmp;
-
-    // DEBUG: // std::cout << "Set nd->parent to " << tmp->data.first << std::endl;
-
-    // DEBUG: // T test2 = (tmp->parent == nullptr ? 0 : tmp->parent->data.first);
-    // DEBUG: // std::cout << "tmp->parent is " << test2 << std::endl;
 
     if (tmp->parent != nullptr)
     {
         if (tmp->parent->right == nd)
         {
             tmp->parent->right = tmp;
-            // DEBUG: // std::cout << "Set tmp->parent->right to " << tmp->data.first << std::endl;
         }
         else
         {
             tmp->parent->left = tmp;
-            // DEBUG: // std::cout << "Set tmp->parent->left to " << tmp->data.first << std::endl;
         }
     }
     else
@@ -316,17 +266,8 @@ void rbt<T>::rotateRight(node<T> *nd)
     }
 
     maxHeight(nd);
-
-    // DEBUG: // std::cout << "Set nd->height to " << nd->height << std::endl;
-
     maxHeight(tmp);
-
-    // DEBUG: // std::cout << "Set tmp->height to " << tmp->height << std::endl;
-
     nd = tmp;
-
-    // DEBUG: // std::cout << "Set nd to " << tmp->data.first << std::endl;
-    // DEBUG: // std::cout << "Result: nd = " << nd->data.first << ", left = " << nd->left->data.first << ", right = " << nd->right->data.first << std::endl;
 }
 
 /*-----------------------------------
@@ -340,29 +281,24 @@ node<T>* rbt<T>::search(int key)
     return search(key, root);
 }
 
-/*-----------------------------------
+/*-------------------------------
     Recursive call for search
--------------------------------------*/
+---------------------------------*/
 
 template <class T>
 node<T>* rbt<T>::search(int key, node<T> *nd)
 {
     if(nd == nullptr) return nullptr;
     if(key == nd->data.first) return nd;
-    if(key > nd->data.first)
-    {
-        return search(key, nd->right);
-    }
-    else
-    {
-        return search(key, nd->left);
-    }
+    if(key > nd->data.first) return search(key, nd->right);
+
+    return search(key, nd->left);
 }
 
-/*-----------------------------------
+/*-------------------------------------
     Print node values between
     traversing left and right trees
--------------------------------------*/
+---------------------------------------*/
 
 template <class T>
 void rbt<T>::inorder()
@@ -371,9 +307,9 @@ void rbt<T>::inorder()
     inorder(root);
 }
 
-/*-----------------------------------
+/*---------------------------------
     Recursive call for inorder
--------------------------------------*/
+-----------------------------------*/
 
 template <class T>
 void rbt<T>::inorder(node<T>* nd)
@@ -381,20 +317,12 @@ void rbt<T>::inorder(node<T>* nd)
     if(nd == nullptr) return;
     inorder(nd->left);
     std::cout << nd->data.first;
-    if(nd -> color == BLACK)
-    {
-        std::cout <<" "<< "color is black" <<std::endl;
-    }
-    else
-    {
-        std::cout <<" "<< "color is red" <<std::endl;
-    }
     inorder(nd->right);
 }
 
-/*-----------------------------------
+/*--------------------------------------
     Print node values in level order
--------------------------------------*/
+----------------------------------------*/
 
 template <class T>
 void rbt<T>::printBreadthFirst()
@@ -432,9 +360,9 @@ void rbt<T>::printBreadthFirst()
 template <class T>
 int rbt<T>::getSize() { return this->size; }
 
-/*--------------------------
+/*-------------------
     Get next node
-----------------------------*/
+---------------------*/
 
 template <class T>
 node<T>* rbt<T>::getNextNode(node<T> *nd)
@@ -482,49 +410,6 @@ node<T>* rbt<T>::getLargestNode(node<T> *nd)
     }
 
     return current;
-
-
-    /*node<T> *current = nd;
-    node<T> *tmp = nd;
-
-    if(current->right != nullptr)
-    {
-        while(current->left != nullptr)
-        {
-            current = current->left;
-        }
-        return current;
-    }
-    
-    current = current->parent;
-
-    while(current != nullptr && tmp == current->right)
-    {
-        tmp = current;
-        current = current->parent;
-    }*/
-
-    /*if(nd == nullptr) return nd;
-
-    node<T> *current = nd;
-
-    if(nd->right != nullptr)
-    {
-        current = nd->right;
-        while(current->right != nullptr)
-        {
-            current = current->right;
-        }
-        return current;
-    }
-
-    current = nd->parent;
-    while(current != nullptr && nd == current->right)
-    {
-        nd = current;
-        current = current->parent;
-    }
-    return current;*/
 }
 
 /*-------------------------------------
@@ -532,17 +417,14 @@ node<T>* rbt<T>::getLargestNode(node<T> *nd)
 ---------------------------------------*/
 
 template <class T>
-void rbt<T>::deleteKey(int key)
+bool rbt<T>::deleteKey(int key)
 {
     node<T> *result = search(key);
 
-    // Perhaps return boolean for QT use?
-    if(result == nullptr)
-    {
-        std::cout << "Cannot delete non-existent key " << key << std::endl;
-        return;
-    }
+    if(result == nullptr) return false;
+
     deleteKey(result);
+    return true;
 }
 
 template <class T>
@@ -704,12 +586,13 @@ void rbt<T>::deleteRecolor(node<T> *nd)
     nd->color = BLACK;
 }
 
-/*-----------------------------------
-    Turn sorted array into RBT, vice-versa
--------------------------------------*/
+/*---------------------------
+    Convert sorted vector
+    into RBT, vice-versa
+-----------------------------*/
 
 template <class T>
-rbt<T> rbt<T>::sortedArrayToTree(std::vector<std::pair<int, T> > items)
+rbt<T> rbt<T>::sortedVectorToTree(std::vector<std::pair<int, T> > items)
 {
     rbt<T> tree;
     unsigned int size = items.size();
@@ -721,9 +604,10 @@ rbt<T> rbt<T>::sortedArrayToTree(std::vector<std::pair<int, T> > items)
 }
 
 template <class T>
-std::vector<std::pair<int, T> > rbt<T>::treeToSortedArray() {
-    std::clog << "this->size: " << this->size << std::endl;
-    std::clog << "vct size: " << this->items.size() << std::endl;
+std::vector<std::pair<int, T> > rbt<T>::treeToSortedVector()
+{
+    // Pairs have their own sorting algorithm implemented
+    // by default using their keys for comparisons
     std::sort(this->items.begin(), this->items.end());
     return this->items;
 }
