@@ -414,7 +414,13 @@ void rbt<T>::printBreadthFirst()
         {
             nodeSet.push(front->right);
         }
-        std::cout << front->data.first << ": " << front->color << std::endl;
+        node<T> *p = front->parent;
+        int test = 0;
+        if(p != nullptr)
+        {
+            test = front->parent->data.first;
+        }
+        std::cout << front->data.first << ": " << front->color << " (" << test << ")" << std::endl;
         nodeSet.pop();
     }
     std::cout << std::endl;
@@ -434,7 +440,52 @@ int rbt<T>::getSize() { return this->size; }
 template <class T>
 node<T>* rbt<T>::getNextNode(node<T> *nd)
 {
+    node<T> *tmp = nd->right;
+    if(tmp != nullptr)
+    {
+        return getSmallestNode(tmp->right);
+    }
+    else
+    {
+        tmp = nd->parent;
+        while(tmp->right == nd)
+        {
+            nd = tmp->right;
+            tmp = tmp->parent;
+        }
+
+        if(tmp == root) return nullptr;
+        return tmp;
+    }
+}
+
+template <class T>
+node<T>* rbt<T>::getSmallestNode(node<T> *nd)
+{
     node<T> *current = nd;
+
+    while(current->left != nullptr)
+    {
+        current = current->left;
+    }
+
+    return current;
+}
+
+template <class T>
+node<T>* rbt<T>::getLargestNode(node<T> *nd)
+{
+    node<T> *current = nd;
+
+    while(current->right != nullptr)
+    {
+        current = current->right;
+    }
+
+    return current;
+
+
+    /*node<T> *current = nd;
     node<T> *tmp = nd;
 
     if(current->right != nullptr)
@@ -452,7 +503,7 @@ node<T>* rbt<T>::getNextNode(node<T> *nd)
     {
         tmp = current;
         current = current->parent;
-    }
+    }*/
 
     /*if(nd == nullptr) return nd;
 
@@ -492,112 +543,78 @@ void rbt<T>::deleteKey(int key)
         std::cout << "Cannot delete non-existent key " << key << std::endl;
         return;
     }
-    root = deleteKey(result);
+    deleteKey(result);
 }
 
 template <class T>
-node<T>* rbt<T>::deleteKey(node<T> *nd)
+void rbt<T>::deleteKey(node<T> *nd)
 {
-    /*node<T> *tmpA, *tmpB;
+    node<T> *tmp = nd;
 
-    if(nd->left == nullptr || nd->right == nullptr)
-    {
-        tmpA = nd;
-    }
-    else
-    {
-        tmpA = getNextNode(nd);
-        // DEBUG: // std::clog << "Next node: " << tmpA->data.first << ", " << tmpA->data.second << std::endl;
-    }
+    if(tmp == nullptr) return;
 
-    if(tmpA->left != nullptr)
+    // Node has 2 children
+    if(tmp->left != nullptr && tmp->right != nullptr)
     {
-        // DEBUG: // std::clog << "tmpA->left: " << tmpA->left->data.first << ", " << tmpA->left->data.second << std::endl;
-        tmpB = tmpA->left;
-    }
-    else
-    {
-        tmpB = tmpA->right;
-    }
-
-    if(tmpB != nullptr)
-    {
-        tmpB->parent = tmpA->parent;
-    }
-
-    if(tmpA->parent == nullptr)
-    {
-        root = tmpB;
-    }
-    else if(tmpA->parent != nullptr && tmpA == tmpA->parent->left)
-    {
-        // DEBUG: // std::clog << "tmpA->parent: " << tmpA->parent->data.first << ", " << tmpA->parent->data.second << std::endl;
-        tmpA->parent->left = tmpB;
-    }
-    else
-    {
-        tmpA->parent->right = tmpB;
-    }
-
-    if(tmpA != nd)
-    {
-        nd->data = tmpA->data;
-    }
-    
-    // DEBUG: // std::clog << tmpA->color << std::endl;
-    if(getColor(tmpA) == BLACK && tmpB != nullptr)
-    {
-        deleteRecolor(tmpB);
-    }
-
-    return tmpA;*/
-
-    if(nd == nullptr) return nd;
-
-    node<T> *tmp;
-
-    // Key for deletion < node's key
-    if(key < nd->data.first)
-    {
-        nd->left = deleteKey(nd->left, key);
-    }
-    
-    // Key for deletion > node's key
-    else if(key > nd->data.first)
-    {
-        nd->right = deleteKey(nd->right, key);
-    }
- 
-    // Key for deletion == node's key
-    else
-    {
-        // Node has <= 1 child
-        if(nd->left == nullptr)
-        {
-            tmp = nd->right;
-            delete nd;
-            return tmp;
-        }
-        else if(nd->right == nullptr)
-        {
-            tmp = nd->left;
-            delete nd;
-            return tmp;
-        }
-    
-        // Node has 2 children: get next node in order
-        tmp = getNextNode(nd->right);
-
-        // Copy the next inorder node data into the current node data
+        tmp = getLargestNode(tmp->left);
         nd->data = tmp->data;
- 
-        // Delete the next inorder node
-        nd->right = deleteKey(nd->right, tmp->data.first);
     }
+    
+    node<T> *remainingChild;
 
-    if(tmp->color == BLACK) deleteRecolor(nd);
+    if(tmp->left != nullptr)
+    {
+        remainingChild = tmp->left;
+    }
+    else
+    {
+        remainingChild = tmp->right;
+    }
+    
+    if(remainingChild != nullptr)
+    {
+        if(tmp == root)
+        {
+            root = remainingChild;
+            remainingChild->parent = nullptr;
+        }
+        else if(tmp == tmp->parent->left)
+        {
+            tmp->parent->left = remainingChild;
+            remainingChild->parent = tmp->parent;
+        }
+        else
+        {
+            tmp->parent->right = remainingChild;
+            remainingChild->parent = tmp->parent;
+        }
 
-    return nd;
+        if(getColor(tmp) == BLACK) deleteRecolor(remainingChild);
+
+        delete tmp;
+    }
+    else if(tmp == root)
+    {
+        root = nullptr;
+    }
+    else
+    {
+        if(getColor(tmp) == BLACK) deleteRecolor(tmp);
+
+        if(tmp->parent != nullptr)
+        {
+            if(tmp == tmp->parent->right)
+            {
+                tmp->parent->right = nullptr;
+            }
+            else
+            {
+                tmp->parent->left = nullptr;
+            }
+        }
+
+        delete tmp;
+    }
 }
 
 template <class T>

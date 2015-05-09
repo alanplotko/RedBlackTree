@@ -63,9 +63,21 @@ int main()
 
     tree.printBreadthFirst();
     
-    std::clog << "\nDeleting -3:\n" << std::endl;
+    std::clog << "\nDeleting 3:\n" << std::endl;
 
-    tree.deleteKey(100);
+    tree.deleteKey(3);
+    
+    tree.printBreadthFirst();
+
+    std::clog << "\nDeleting 8:\n" << std::endl;
+
+    tree.deleteKey(8);
+    
+    tree.printBreadthFirst();
+
+    std::clog << "\nDeleting 9:\n" << std::endl;
+
+    tree.deleteKey(9);
     
     tree.printBreadthFirst();
 

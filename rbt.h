@@ -24,6 +24,8 @@ class rbt
         rbt<T> sortedArrayToTree(std::vector<std::pair<int, T> > items);
         std::vector<std::pair<int, T> > treeToSortedArray();
         node<T>* getNextNode(node<T> *nd);
+        node<T>* getSmallestNode(node<T> *nd);
+        node<T>* getLargestNode(node<T> *nd);
         void deleteKey(int key);
         void insertRecolor(node<T> *nd);
         void deleteRecolor(node<T> *nd);
@@ -37,7 +39,7 @@ class rbt
         int size;
         std::vector<std::pair<int, T> > items;
         void insert(node<T> *nd, std::pair<int, T> item);
-        node<T>* deleteKey(node<T> *nd);
+        void deleteKey(node<T> *nd);
         node<T>* search(int key, node<T> *nd);
         void inorder(node<T> *nd);
         void cleanRbt(node<T> *nd);
