@@ -14,6 +14,7 @@
 #include <QMainWindow>
 #include <QGraphicsScene>
 #include <QGraphicsView>
+#include <queue>
 #include "rbt.h"
 
 namespace Ui {
@@ -39,6 +40,7 @@ public slots:
 
 private:
     Ui::MainWindow *ui;
+    std::queue<node<int>*> setUpQ;
     QWidget *mainWidget;
     QGraphicsView *view;
     QGraphicsScene *scene;
@@ -46,6 +48,7 @@ private:
     QPushButton *insertBtn, *deleteBtn, *toArrayBtn, *toTreeBtn;
     QLineEdit *deleteLine, *insertLine, *toArrayLine, *toTreeLine;
     void setUpMenu();
+    void setUpTree();
 
 };
 

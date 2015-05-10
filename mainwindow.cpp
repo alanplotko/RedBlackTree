@@ -329,3 +329,14 @@ void MainWindow::quitApp()
         QApplication::quit();
     }
 }
+
+void MainWindow::setUpTree()
+{
+    int height = 0;
+    int width = 0;
+    setUpQ = tree.getNodeBreadthFirst();
+    for(int i = 0;i<setUpQ.size(); i++)
+    {
+        height = setUpQ.front() -> height;
+    }
+}

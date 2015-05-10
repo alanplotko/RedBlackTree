@@ -5,6 +5,7 @@
 #include <iostream>
 #include <utility>
 #include <vector>
+#include <queue>
 
 template <class T>
 class rbt
@@ -45,6 +46,7 @@ class rbt
         node<T>* getLargestNode(node<T> *nd);
         type getColor(node<T> *nd);
         int getSize();
+        std::queue<node<T>*> getNodeBreadthFirst();
 
         // Clear the tree
         void cleanRbt();

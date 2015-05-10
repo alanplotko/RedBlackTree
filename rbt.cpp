@@ -632,3 +632,27 @@ std::vector<std::pair<int, T> > rbt<T>::treeToSortedVector()
     std::sort(this->items.begin(), this->items.end());
     return this->items;
 }
+
+template<class T>
+std::queue<node<T>*> rbt<T>::getNodeBreadthFirst()
+{
+    std::queue<node<T>*> nodeSet;
+    std::queue<node<T>*> retSet;
+    if(root == nullptr) return retSet;
+    nodeSet.push(root);
+    while(!nodeSet.empty())
+    {
+        node<T>* front = nodeSet.front();
+        if(front->left != nullptr)
+        {
+            nodeSet.push(front->left);
+        }
+        if(front->right != nullptr)
+        {
+            nodeSet.push(front->right);
+        }
+        retSet.push(nodeSet.front());
+        nodeSet.pop();
+    }
+    return nodeSet;
+}
