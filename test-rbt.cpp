@@ -8,7 +8,7 @@ int main()
     -----------------------------------*/
 
     rbt<int> tree;
-    std::vector<int> nums = { 7, 3, 9, 8, 10 };
+    std::vector<int> nums = { -12, 1, 4, 1 };
 
     for(auto itr : nums)
     {
@@ -53,7 +53,7 @@ int main()
         Delete Key Tests
     --------------------------*/
 
-    std::clog << std::endl;
+    /*std::clog << std::endl;
 
     tree.printBreadthFirst();
 
@@ -85,7 +85,7 @@ int main()
 
     tree.deleteKey(10);
     
-    tree.printBreadthFirst();
+    tree.printBreadthFirst();*/
 
     /*------------------------
         Sorted Array Tests

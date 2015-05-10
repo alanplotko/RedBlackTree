@@ -46,6 +46,9 @@ class rbt
         type getColor(node<T> *nd);
         int getSize();
 
+        // Clear the tree
+        void cleanRbt();
+
     private:
 
         // Tree variables

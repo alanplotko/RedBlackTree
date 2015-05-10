@@ -8,11 +8,22 @@
 ---------------------------*/
 
 template <class T>
-rbt<T>::~rbt() { cleanRbt(root); }
+rbt<T>::~rbt()
+{
+    cleanRbt(root);
+}
 
 /*----------------------------------
    Destroy all nodes in RBT tree
 ------------------------------------*/
+
+template <class T>
+void rbt<T>::cleanRbt() {
+    cleanRbt(root);
+    size = 0;
+    items.clear();
+    root = nullptr;
+}
 
 template <class T>
 void rbt<T>::cleanRbt(node<T> *nd)
@@ -66,8 +77,8 @@ void rbt<T>::insert(node<T> *nd, std::pair<int, T> item)
 {
     node<T>* newNode;
 
-    // Case 1: item weight > current node weight
-    if(item.first > nd->data.first)
+    // Case 1: item weight >= current node weight
+    if(item.first >= nd->data.first)
     {
         // Case 1a: found open space for insert
         if(nd->right == nullptr)
