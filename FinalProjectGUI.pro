@@ -13,8 +13,13 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-        mainwindow.cpp
+        mainwindow.cpp \
+    rbt.cpp
 
-HEADERS  += mainwindow.h
+HEADERS  += mainwindow.h \
+    node.h \
+    rbt.h
+
+CONFIG += c++11
 
 FORMS    += mainwindow.ui

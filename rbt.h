@@ -4,41 +4,68 @@
 #include "node.h"
 #include <iostream>
 #include <utility>
+#include <vector>
 
 template <class T>
 class rbt
 {
     public:
-        rbt():root(nullptr){}
+
+        rbt():root(nullptr),size(0){}
         ~rbt();
-        void insert(std::pair<int, T> item);
-        //friend std::ostream& operator<<(std::ostream &out, rbt &willow);
-        int balanceFactor(node<T> *nd);
-        void maxHeight(node<T> *nd);
+
+        // Tree rotations
         void rotateLeft(node<T> *nd);
         void rotateRight(node<T> *nd);
+
+        // Tree restructuring
+        int balanceFactor(node<T> *nd);
+        void maxHeight(node<T> *nd);
+
+        // Tree recoloring
+        void insertRecolor(node<T> *nd);
+        void deleteRecolor(node<T> *nd);
+
+        // Tree data manipulations
+        void insert(std::pair<int, T> item);
         node<T>* search(int key);
+        bool deleteKey(int key);
+
+        // Tree conversions: to/from a sorted vector
+        rbt<T> sortedVectorToTree(std::vector<std::pair<int, T> > items);
+        std::vector<std::pair<int, T> > treeToSortedVector();
+        
+        // Tree traversal
         void inorder();
         void printBreadthFirst();
-        rbt* sortedArray(std::pair<int, T> items[]);
-        void deleteKey(int key);
-        void inOrderColor();
-        
-        void pathCheck(node<T> *nd);
-        
-        //Color helper functions
-        void childCheck(node<T> *nd);
-        void leftLeft(node<T> *curNd, node<T> *grandPa, node<T> *dad);
-        void leftRight(node<T> *curNd, node<T> *grandPa, node<T> *dad);
-        void rightRight(node<T> *curNd, node<T> *grandPa, node<T> *dad);
-        void rightLeft(node<T> *curNd, node<T> *grandPa, node<T> *dad);
+
+        // Tree helper functions
+        node<T>* getNextNode(node<T> *nd);
+        node<T>* getSmallestNode(node<T> *nd);
+        node<T>* getLargestNode(node<T> *nd);
+        type getColor(node<T> *nd);
+        int getSize();
+
+        // Clear the tree
+        void cleanRbt();
+
     private:
+
+        // Tree variables
         node<T> *root;
-        void insert(node<T> *nd, std::pair<int, T> item);
+        int size;
+        std::vector<std::pair<int, T> > items;
+
+        // Tree data manipulation functions
+        node<T>* insert(node<T> *nd, std::pair<int, T> item);
         node<T>* search(int key, node<T> *nd);
+        void deleteKey(node<T> *nd);
+        
+        // Tree traversal
         void inorder(node<T> *nd);
+
+        // Tree destructor helper
         void cleanRbt(node<T> *nd);
-        void inOrderColor(node<T> *nd);
 };
 
 #include "rbt.cpp"

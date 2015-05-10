@@ -8,14 +8,18 @@ enum type {RED, BLACK};
 template <typename T>
 struct node
 {
-    node<T> *right;
     node<T> *left;
+    node<T> *right;
     node<T> *parent;
     type color;
     int height;
     std::pair<int, T> data;
-    node():right(nullptr),left(nullptr),parent(nullptr),height(1),data(nullptr),color(RED){}
-    node(std::pair<int, T> item):right(nullptr),left(nullptr),parent(nullptr),height(1),data(item),color(RED){}
+
+    /*  RBT nodes are red by default, but may change in color
+        at any time when the tree undergoes recoloring */
+    
+    node():left(nullptr),right(nullptr),parent(nullptr),color(RED),height(1),data(nullptr){}
+    node(std::pair<int, T> item):left(nullptr),right(nullptr),parent(nullptr),color(RED),height(1),data(item){}
 };
 
 #endif

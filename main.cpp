@@ -1,56 +1,28 @@
-#include "rbt.h"
-#include <vector>
+#include "mainwindow.h"
+#include <QApplication>
+#include <QSplashScreen>
+#include <QRect>
+#include <QDesktopWidget>
 
-int main()
+int main(int argc, char *argv[])
 {
-    /*---------------------------------
-        RBT insert and inorder test
-    -----------------------------------*/
+    QApplication a(argc, argv);
+    MainWindow w;
 
-    rbt<int> tree;
-    std::vector<int> nums = { 7, 3, 9, -3, 10 };
+    // Set window title
+    w.setWindowTitle("Red-Black Trees");
 
-    /*for(auto itr : nums)
-    {
-        tree.insert(std::make_pair(itr, itr));
-        std::clog << "\nInserting " << itr << ", in order print: " << std::endl;
-        tree.inorder();  
-    }*/
+    // Set window's initial dimensions
+    w.setFixedSize(800, 400);
 
-    tree.insert(std::make_pair(2, 2));
-    tree.insert(std::make_pair(1, 1));
-    tree.insert(std::make_pair(7, 7));
-    tree.insert(std::make_pair(8, 8));
-    tree.inorder();
+    // Center window on desktop
+    QRect screenGeometry = QApplication::desktop()->screenGeometry();
+    int x = (screenGeometry.width() - w.width()) / 2;
+    int y = (screenGeometry.height() - w.height()) / 2;
+    w.move(x, y);
 
+    // Show window
+    w.show();
 
-    std::clog << std::endl;
-
-    /*---------------------
-        RBT search test
-    -----------------------*/
-
-    // Add in new nums for testing failed searches
-    nums.push_back(0);
-    nums.push_back(1);
-    nums.insert(nums.begin(), 2);
-    nums.insert(nums.begin(), 5);
-
-    for(auto itr : nums)
-    {
-        std::clog << "Searching for " << itr;
-        if(itr >= 0 && itr < 10) std::clog << "\t";
-        std::clog << "\t...\t";
-        node<int> *nd = tree.search(itr);
-        if(nd != nullptr)
-        {
-            std::clog << "found it!" << std::endl;
-        }
-        else
-        {
-            std::clog << "not found!" << std::endl;
-        }
-    }
-
-    return 0;
+    return a.exec();
 }

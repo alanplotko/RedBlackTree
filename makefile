@@ -1,13 +1,13 @@
 CC=g++
 CPPFLAGS=-g -Wall
 
-all: main
+all: test-rbt
 
-main: main.o
-	$(CC) -std=c++11 main.o -o main
+test-rbt: test-rbt.o
+	$(CC) -std=c++11 test-rbt.o -o test-rbt
 
-main.o: main.cpp rbt.h rbt.cpp
-	$(CC) -std=c++11 -c main.cpp
+test-rbt.o: test-rbt.cpp rbt.h rbt.cpp
+	$(CC) -std=c++11 -c test-rbt.cpp
 
 clean:
-	rm *.o *~ -f main
+	rm *.o *~ -f test-rbt
