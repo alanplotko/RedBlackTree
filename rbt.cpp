@@ -461,7 +461,7 @@ void rbt<T>::deleteKey(node<T> *nd)
         tmp = getLargestNode(tmp->left);
         nd->data = tmp->data;
     }
-    
+
     node<T> *remainingChild;
 
     if(tmp->left != nullptr)
@@ -472,7 +472,7 @@ void rbt<T>::deleteKey(node<T> *nd)
     {
         remainingChild = tmp->right;
     }
-    
+
     if(remainingChild != nullptr)
     {
         if(tmp == root)
@@ -534,7 +534,7 @@ void rbt<T>::deleteRecolor(node<T> *nd)
         if(nd == nd->parent->left)
         {
             node<T> *sibling = nd->parent->right;
-            
+
             if(getColor(sibling) == RED)
             {
                 sibling->color = BLACK;
@@ -542,7 +542,7 @@ void rbt<T>::deleteRecolor(node<T> *nd)
                 rotateLeft(nd->parent);
                 sibling = nd->parent->right;
             }
-            
+
             if(getColor(sibling->left) == BLACK && getColor(sibling->right) == BLACK)
             {
                 sibling->color = RED;
@@ -578,7 +578,7 @@ void rbt<T>::deleteRecolor(node<T> *nd)
                 rotateRight(nd->parent);
                 sibling = nd->parent->left;
             }
-    
+
             if(getColor(sibling->left) == BLACK && getColor(sibling->right) == BLACK)
             {
                 sibling->color = RED;
@@ -654,5 +654,5 @@ std::queue<node<T>*> rbt<T>::getNodeBreadthFirst()
         retSet.push(nodeSet.front());
         nodeSet.pop();
     }
-    return nodeSet;
+    return retSet;
 }

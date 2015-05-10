@@ -5,6 +5,7 @@
 #include <QMessageBox>
 #include <limits>
 #include <QFrame>
+#include <cmath>
 #include "nodegraphic.h"
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -170,13 +171,14 @@ void MainWindow::insertItem()
 
     tree.insert(std::make_pair(num, num));
     insertLine->clear();
-    QColor color(255,55,56);
-    QGraphicsItem *item = new NodeGraphic(color, 5, 5, num);
-    QGraphicsItem *item2 = new NodeGraphic(color, 5, 5, num);
-    item->setPos(QPointF(0, 0));
-    item2->setPos(QPointF(60, 60));
-    scene->addItem(item);
-    scene ->addItem(item2);
+//    QColor color(255,55,56);
+//    QGraphicsItem *item = new NodeGraphic(color, 5, 5, num);
+//    QGraphicsItem *item2 = new NodeGraphic(color, 5, 5, num);
+//    item->setPos(QPointF(0, 0));
+//    item2->setPos(QPointF(60, 60));
+//    scene->addItem(item);
+//    scene ->addItem(item2);
+    setUpTree();
     ui->statusBar->showMessage("Added a new integer: " + QString::number(num));
     insertBtn->setDisabled(false);
 }
@@ -332,11 +334,20 @@ void MainWindow::quitApp()
 
 void MainWindow::setUpTree()
 {
-    int height = 0;
-    int width = 0;
+    int tHeight = 0;
+    int tWidth = 0;
     setUpQ = tree.getNodeBreadthFirst();
-    for(int i = 0;i<setUpQ.size(); i++)
+    for(int i = 0;i<tree.getSize(); i++)
     {
-        height = setUpQ.front() -> height;
+        if(tWidth < pow(2,tHeight))
+        {
+            tWidth++;
+            setUpQ.pop();
+        }
+        if(tWidth == pow(2,tHeight))
+        {
+            tHeight++;
+        }
     }
+
 }

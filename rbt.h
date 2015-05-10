@@ -35,7 +35,7 @@ class rbt
         // Tree conversions: to/from a sorted vector
         rbt<T> sortedVectorToTree(std::vector<std::pair<int, T> > items);
         std::vector<std::pair<int, T> > treeToSortedVector();
-        
+
         // Tree traversal
         void inorder();
         void printBreadthFirst();
@@ -62,7 +62,7 @@ class rbt
         node<T>* insert(node<T> *nd, std::pair<int, T> item);
         node<T>* search(int key, node<T> *nd);
         void deleteKey(node<T> *nd);
-        
+
         // Tree traversal
         void inorder(node<T> *nd);
 
