@@ -170,12 +170,13 @@ void MainWindow::insertItem()
 
     tree.insert(std::make_pair(num, num));
     insertLine->clear();
-    QColor color;
-    QGraphicsItem *item = new NodeGraphic(color, 50, 50);
-    QGraphicsItem *item2 = new NodeGraphic(color, 50, 50);
+    QColor color(255,55,56);
+    QGraphicsItem *item = new NodeGraphic(color, 5, 5, num);
+    QGraphicsItem *item2 = new NodeGraphic(color, 5, 5, num);
     item->setPos(QPointF(0, 0));
-    item2->setPos(QPointF(-1, -1));
+    item2->setPos(QPointF(60, 60));
     scene->addItem(item);
+    scene ->addItem(item2);
     ui->statusBar->showMessage("Added a new integer: " + QString::number(num));
     insertBtn->setDisabled(false);
 }

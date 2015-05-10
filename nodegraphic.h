@@ -8,7 +8,7 @@
 class NodeGraphic : public QGraphicsItem
 {
 public:
-    NodeGraphic(const QColor &color, int x, int y);
+    NodeGraphic(const QColor &color, int x, int y, int numIn);
 
     QRectF boundingRect() const Q_DECL_OVERRIDE;
     QPainterPath shape() const Q_DECL_OVERRIDE;
@@ -18,6 +18,7 @@ public:
 private:
     int x;
     int y;
+    int numIn;
     QColor color;
     QVector<QPointF> stuff;
 };

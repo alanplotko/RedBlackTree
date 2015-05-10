@@ -3,10 +3,11 @@
 
 #include <QtWidgets>
 
-NodeGraphic::NodeGraphic(const QColor &color, int x, int y)
+NodeGraphic::NodeGraphic(const QColor &color, int x, int y, int numIn)
 {
     this->x = x;
     this->y = y;
+    this ->numIn = numIn;
     this->color = color;
 }
 
@@ -29,6 +30,7 @@ void NodeGraphic::paint(QPainter *painter, const QStyleOptionGraphicsItem *optio
     QColor fillColor = (option->state & QStyle::State_Selected) ? color.dark(150) : color;
     if (option->state & QStyle::State_MouseOver)
         fillColor = fillColor.light(125);
+    painter->drawText(0, 0, QString(QString::number(numIn)));
 
     const qreal lod = option->levelOfDetailFromTransform(painter->worldTransform());
     if (lod < 0.2) {
@@ -70,7 +72,6 @@ void NodeGraphic::paint(QPainter *painter, const QStyleOptionGraphicsItem *optio
         font.setStyleStrategy(QFont::ForceOutline);
         painter->setFont(font);
         painter->save();
-        painter->scale(0.1, 0.1);
         painter->drawText(170, 180, QString("Model: VSC-2000 (Very Small Chip) at %1x%2").arg(x).arg(y));
         painter->drawText(170, 200, QString("Serial number: DLWR-WEER-123L-ZZ33-SDSJ"));
         painter->drawText(170, 220, QString("Manufacturer: Chip Manufacturer"));
