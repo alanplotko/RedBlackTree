@@ -518,7 +518,6 @@ void rbt<T>::deleteKey(node<T> *nd)
     // Case 2: tree is now empty
     else if(tmp == root)
     {
-        delete tmp;
         root = nullptr;
         return;
     }
@@ -604,7 +603,7 @@ void rbt<T>::deleteRecolor(node<T> *nd)
                 nd = root;
             }
         }
-        else
+        else if(nd == nd->parent->right)
         {
             node<T> *sibling = nd->parent->left;
 

@@ -37,7 +37,6 @@ MainWindow::MainWindow(QWidget *parent) :
     deleteLine = new QLineEdit();
     toTreeLine = new QLineEdit();
     toArrayLine = new QLineEdit();
-    toArrayLine->setDisabled(true);
 
     insertLine->setPlaceholderText("(1 Integer)");
     insertLine->setAlignment(Qt::AlignCenter);
@@ -224,7 +223,7 @@ void MainWindow::convertTreeToArray()
     if(size == 0)
     {
         QMessageBox::warning(this, tr("Error"), tr("The red-black tree is empty!"));
-        toArrayLine->setText("Fetch sorted array of integers from RBT");
+        toArrayLine->clear();
         toArrayBtn->setDisabled(false);
         return;
     }
