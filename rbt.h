@@ -19,7 +19,6 @@ class rbt
         void rotateRight(node<T> *nd);
 
         // Tree restructuring
-        int balanceFactor(node<T> *nd);
         void maxHeight(node<T> *nd);
 
         // Tree recoloring
@@ -57,7 +56,7 @@ class rbt
         std::vector<std::pair<int, T> > items;
 
         // Tree data manipulation functions
-        node<T>* insert(node<T> *nd, std::pair<int, T> item);
+        void insert(node<T> *nd, std::pair<int, T> item);
         node<T>* search(int key, node<T> *nd);
         void deleteKey(node<T> *nd);
         
