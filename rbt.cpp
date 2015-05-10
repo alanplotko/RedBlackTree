@@ -432,16 +432,10 @@ bool rbt<T>::deleteKey(int key)
     deleteKey(result);
 
     // Delete corresponding item from vector
-    for(int i = 0; i < size; i++)
-    {
-        if(items[i] == result->data)
-        {
-            items.erase(items.begin() + i);
-            break;
-        }
-    }
+    std::pair<int, int> pair = std::make_pair(key, key);
+    items.erase(std::remove(items.begin(), items.end(), pair), items.end());
 
-    // Update size of vector
+    // Update size of tree
     size--;
 
     return true;
@@ -513,7 +507,26 @@ void rbt<T>::deleteKey(node<T> *nd)
             remainingChild->parent = tmp->parent;
         }
 
-        // Proceed to case 3 to delete tmp
+        /*  If the tmp node is black, then the tree is not
+            a valid rbt, and needs to be recolored */
+        if(getColor(tmp) == BLACK) deleteRecolor(tmp);
+
+        /*  Before deleting tmp, we want to remove
+            the association its parent has to tmp */
+        if(tmp->parent != nullptr)
+        {
+            if(tmp == tmp->parent->right)
+            {
+                tmp->parent->right = nullptr;
+            }
+            else
+            {
+                tmp->parent->left = nullptr;
+            }
+        }
+
+        delete tmp;
+        return;
     }
 
     // Case 2: tree is now empty
@@ -524,26 +537,29 @@ void rbt<T>::deleteKey(node<T> *nd)
     }
 
     // Case 3: 0 child nodes remain
-    
-    /*  If the tmp node is black, then the tree is not
-        a valid rbt, and needs to be recolored */
-    if(getColor(tmp) == BLACK) deleteRecolor(tmp);
-
-    /*  Before deleting tmp, we want to remove
-        the association its parent has to tmp */
-    if(tmp->parent != nullptr)
+    else
     {
-        if(tmp == tmp->parent->right)
-        {
-            tmp->parent->right = nullptr;
-        }
-        else
-        {
-            tmp->parent->left = nullptr;
-        }
-    }
+        /*  If the tmp node is black, then the tree is not
+            a valid rbt, and needs to be recolored */
+        if(getColor(tmp) == BLACK) deleteRecolor(tmp);
 
-    delete tmp;
+        /*  Before deleting tmp, we want to remove
+            the association its parent has to tmp */
+        if(tmp->parent != nullptr)
+        {
+            if(tmp == tmp->parent->right)
+            {
+                tmp->parent->right = nullptr;
+            }
+            else
+            {
+                tmp->parent->left = nullptr;
+            }
+        }
+
+        delete tmp;
+        return;
+    }
 }
 
 /*----------------------
