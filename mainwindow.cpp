@@ -239,7 +239,7 @@ void MainWindow::convertTreeToArray()
     if(size == 0)
     {
         QMessageBox::warning(this, tr("Error"), tr("The red-black tree is empty!"));
-        toArrayLine->setText("Fetch sorted array of integers from RBT");
+        toArrayLine->clear();
         toArrayBtn->setDisabled(false);
         return;
     }
