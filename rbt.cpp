@@ -58,7 +58,10 @@ void rbt<T>::insert(std::pair<int, T> item)
     // Case 2: insert into correct position
     else
     {
-        insert(root, item);
+        node<T>* nd = insert(root, item);
+
+        // Recolor tree based on new node's properties
+        insertRecolor(nd);
     }
 
     // Keep track of tree size
@@ -73,9 +76,9 @@ void rbt<T>::insert(std::pair<int, T> item)
 ---------------------------------*/
 
 template <class T>
-void rbt<T>::insert(node<T> *nd, std::pair<int, T> item)
+node<T>* rbt<T>::insert(node<T> *nd, std::pair<int, T> item)
 {
-    node<T>* newNode;
+    node<T> *newNode;
 
     // Case 1: item weight >= current node weight
     if(item.first >= nd->data.first)
@@ -111,9 +114,7 @@ void rbt<T>::insert(node<T> *nd, std::pair<int, T> item)
             insert(nd->left, item);
         }
     }
-
-    // Recolor tree based on new node's properties
-    insertRecolor(newNode);
+    return newNode;
 }
 
 /*---------------------------------------
@@ -616,7 +617,7 @@ rbt<T> rbt<T>::sortedVectorToTree(std::vector<std::pair<int, T> > items)
 {
     rbt<T> tree;
     unsigned int size = items.size();
-    for(int i = 0; i < size; i++)
+    for(unsigned int i = 0; i < size; i++)
     {
         tree.insert(items[i]);
     }

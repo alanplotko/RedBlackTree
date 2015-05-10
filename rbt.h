@@ -57,7 +57,7 @@ class rbt
         std::vector<std::pair<int, T> > items;
 
         // Tree data manipulation functions
-        void insert(node<T> *nd, std::pair<int, T> item);
+        node<T>* insert(node<T> *nd, std::pair<int, T> item);
         node<T>* search(int key, node<T> *nd);
         void deleteKey(node<T> *nd);
         

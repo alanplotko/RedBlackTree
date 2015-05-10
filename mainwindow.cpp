@@ -204,18 +204,19 @@ void MainWindow::deleteItem()
     if(result)
     {
         QMessageBox::information(this, tr("Success"), tr("Node removed from the red-black tree!"));
-        ui->statusBar->showMessage("Success: deleted node with key: " + QString::number(key));
+        ui->statusBar->showMessage("Success: deleted node with key " + QString::number(key));
     }
     else
     {
         QMessageBox::warning(this, tr("Error"), tr("Node not found in red-black tree!"));
-        ui->statusBar->showMessage("Error: could not find node with key: " + QString::number(key));
+        ui->statusBar->showMessage("Error: could not find node with key " + QString::number(key));
     }
     deleteBtn->setDisabled(false);
 }
 
 void MainWindow::convertTreeToArray()
 {
+    toArrayBtn->setDisabled(true);
     std::vector<std::pair<int, int> > vct = tree.treeToSortedVector();
     unsigned int size = vct.size();
     QString s = "";
@@ -224,6 +225,7 @@ void MainWindow::convertTreeToArray()
     {
         QMessageBox::warning(this, tr("Error"), tr("The red-black tree is empty!"));
         toArrayLine->setText("Fetch sorted array of integers from RBT");
+        toArrayBtn->setDisabled(false);
         return;
     }
 
@@ -238,11 +240,52 @@ void MainWindow::convertTreeToArray()
 
     QMessageBox::information(this, tr("Success"), tr("Fetched array from red-black tree!"));
     toArrayLine->setText(s);
+    toArrayBtn->setDisabled(false);
     return;
 }
 
 void MainWindow::convertArrayToTree()
 {
+    toTreeBtn->setDisabled(true);
+    std::vector<std::pair<int, int> > vct;
+    QString s = toTreeLine->text();
+
+    if(s.size() == 0)
+    {
+        QMessageBox::warning(this, tr("Error"), tr("You must provide a valid comma-separated list of integers!"));
+        toTreeLine->clear();
+        toTreeBtn->setDisabled(false);
+        return;
+    }
+
+    QStringList lst = s.split(",");
+
+    QRegExp re("-?\\d*");
+    int num;
+
+    for(auto word : lst)
+    {
+        QString trimmedWord = word.trimmed();
+        if(re.exactMatch(trimmedWord))
+        {
+            num = trimmedWord.toInt();
+            std::cout << num << std::endl;
+            if(num > INT_MAX || num < INT_MIN)
+            {
+                QMessageBox::warning(this, tr("Error"), tr("You entered an integer beyond its limits!"));
+                toTreeBtn->setDisabled(false);
+                return;
+            }
+            vct.push_back(std::make_pair(num, num));
+        }
+    }
+
+    tree.cleanRbt();
+    tree = tree.sortedVectorToTree(vct);
+
+    toTreeLine->clear();
+    toTreeBtn->setDisabled(false);
+    QMessageBox::information(this, tr("Success"), tr("Loaded array into red-black tree!"));
     return;
 }
 
