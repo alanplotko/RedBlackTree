@@ -435,6 +435,15 @@ bool rbt<T>::deleteKey(int key)
     if(result == nullptr) return false;
 
     deleteKey(result);
+    for(int i = 0; i < size; i++)
+    {
+        if(items[i] == result->data)
+        {
+            items.erase(items.begin() + i);
+            break;
+        }
+    }
+    size--;
     return true;
 }
 

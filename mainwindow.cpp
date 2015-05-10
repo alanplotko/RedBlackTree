@@ -131,12 +131,14 @@ void MainWindow::setUpMenu()
 
 void MainWindow::insertItem()
 {
+    insertBtn->setDisabled(true);
     QString s = insertLine->text();
     s = s.trimmed();
 
     if(s.size() == 0)
     {
         QMessageBox::warning(this, tr("Error"), tr("You need to type in an integer before you can insert it into the red-black tree."));
+        insertBtn->setDisabled(false);
         return;
     }
 
@@ -148,23 +150,68 @@ void MainWindow::insertItem()
         if(num > INT_MAX || num < INT_MIN)
         {
             QMessageBox::warning(this, tr("Error"), tr("You entered an integer beyond its limits!"));
+            insertBtn->setDisabled(false);
             return;
         }
     }
     else
     {
         QMessageBox::warning(this, tr("Error"), tr("You entered an invalid integer!"));
+        insertBtn->setDisabled(false);
         return;
     }
 
     tree.insert(std::make_pair(num, num));
     insertLine->clear();
     ui->statusBar->showMessage("Added a new integer: " + QString::number(num));
+    insertBtn->setDisabled(false);
 }
 
 void MainWindow::deleteItem()
 {
-    return;
+    deleteBtn->setDisabled(true);
+    QString s = deleteLine->text();
+    s = s.trimmed();
+
+    if(s.size() == 0)
+    {
+        QMessageBox::warning(this, tr("Error"), tr("You need to type in an integer before you can delete the corresponding node from the red-black tree."));
+        deleteBtn->setDisabled(false);
+        return;
+    }
+
+    int key;
+    QRegExp re("-?\\d*");
+    if(re.exactMatch(s))
+    {
+        key = s.toInt();
+        if(key > INT_MAX || key < INT_MIN)
+        {
+            QMessageBox::warning(this, tr("Error"), tr("You entered an integer beyond its limits!"));
+            deleteBtn->setDisabled(false);
+            return;
+        }
+    }
+    else
+    {
+        QMessageBox::warning(this, tr("Error"), tr("You entered an invalid integer!"));
+        deleteBtn->setDisabled(false);
+        return;
+    }
+
+    bool result = tree.deleteKey(key);
+    deleteLine->clear();
+    if(result)
+    {
+        QMessageBox::information(this, tr("Success"), tr("Node removed from the red-black tree!"));
+        ui->statusBar->showMessage("Success: deleted node with key: " + QString::number(key));
+    }
+    else
+    {
+        QMessageBox::warning(this, tr("Error"), tr("Node not found in red-black tree!"));
+        ui->statusBar->showMessage("Error: could not find node with key: " + QString::number(key));
+    }
+    deleteBtn->setDisabled(false);
 }
 
 void MainWindow::convertTreeToArray()
@@ -176,6 +223,7 @@ void MainWindow::convertTreeToArray()
     if(size == 0)
     {
         QMessageBox::warning(this, tr("Error"), tr("The red-black tree is empty!"));
+        toArrayLine->setText("Fetch sorted array of integers from RBT");
         return;
     }
 
