@@ -8,7 +8,7 @@ int main()
     -----------------------------------*/
 
     rbt<int> tree;
-    std::vector<int> nums = { -12, 1, 4, 1 };
+    std::vector<int> nums = { -12, 4, 5, 8, 1, 2, 9, 0, 3 };
 
     for(auto itr : nums)
     {
@@ -53,7 +53,7 @@ int main()
         Delete Key Tests
     --------------------------*/
 
-    /*std::clog << std::endl;
+    std::clog << std::endl;
 
     tree.printBreadthFirst();
 
@@ -85,13 +85,13 @@ int main()
 
     tree.deleteKey(10);
     
-    tree.printBreadthFirst();*/
+    tree.printBreadthFirst();
 
     /*------------------------
         Sorted Array Tests
     --------------------------*/
 
-    /*std::vector<std::pair<int, int> > vct = tree.treeToSortedArray();
+    std::vector<std::pair<int, int> > vct = tree.treeToSortedVector();
     unsigned int treeSize = tree.getSize();
     for(int i = 0; i < treeSize; i++)
     {
@@ -100,8 +100,8 @@ int main()
 
     vct.push_back(std::make_pair(15, 15));
 
-    rbt<int> newTree = tree.sortedArrayToTree(vct);
-    newTree.inorder();*/
+    rbt<int> newTree = tree.sortedVectorToTree(vct);
+    newTree.inorder();
 
     return 0;
 }
