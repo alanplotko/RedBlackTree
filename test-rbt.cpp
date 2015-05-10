@@ -101,13 +101,14 @@ int main()
 
     tree.deleteKey(10);
     
-    tree.printBreadthFirst();*/
+    tree.printBreadthFirst();
 
   /*------------------------
     Sorted Array Tests
     --------------------------*/
 
   /*std::vector<std::pair<int, int> > vct = tree.treeToSortedArray();
+
     unsigned int treeSize = tree.getSize();
     for(int i = 0; i < treeSize; i++)
     {
@@ -116,7 +117,7 @@ int main()
 
     vct.push_back(std::make_pair(15, 15));
 
-    rbt<int> newTree = tree.sortedArrayToTree(vct);
+    rbt<int> newTree = tree.sortedVectorToTree(vct);
     newTree.inorder();*/
 
   return 0;

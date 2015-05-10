@@ -18,8 +18,11 @@ rbt<T>::~rbt()
 ------------------------------------*/
 
 template <class T>
-void rbt<T>::cleanRbt() {
+void rbt<T>::cleanRbt()
+{
     cleanRbt(root);
+    
+    // Reset size and sorted vector
     size = 0;
     items.clear();
     root = nullptr;
@@ -58,10 +61,7 @@ void rbt<T>::insert(std::pair<int, T> item)
     // Case 2: insert into correct position
     else
     {
-        node<T>* nd = insert(root, item);
-
-        // Recolor tree based on new node's properties
-        insertRecolor(nd);
+        insert(root, item);
     }
 
     // Keep track of tree size
@@ -76,19 +76,21 @@ void rbt<T>::insert(std::pair<int, T> item)
 ---------------------------------*/
 
 template <class T>
-node<T>* rbt<T>::insert(node<T> *nd, std::pair<int, T> item)
+void rbt<T>::insert(node<T> *nd, std::pair<int, T> item)
 {
-    node<T> *newNode;
-
     // Case 1: item weight >= current node weight
     if(item.first >= nd->data.first)
     {
         // Case 1a: found open space for insert
         if(nd->right == nullptr)
         {
-            newNode = new node<T>(item);
+            node<T> *newNode = new node<T>(item);
             nd->right = newNode;
             newNode->parent = nd;
+
+            // Recolor tree based on new node's properties
+            insertRecolor(newNode);
+            return;
         }
         // Case 1b: current space contains node;
         //          keep moving to the right
@@ -103,9 +105,13 @@ node<T>* rbt<T>::insert(node<T> *nd, std::pair<int, T> item)
         // Case 2a: found open space for insert
         if(nd->left == nullptr)
         {
-            newNode = new node<T>(item);
+            node<T> *newNode = new node<T>(item);
             nd->left = newNode;
             newNode->parent = nd;
+
+            // Recolor tree based on new node's properties
+            insertRecolor(newNode);
+            return;
         }
         // Case 2b: current space contains node;
         //          keep moving to the left
@@ -114,7 +120,6 @@ node<T>* rbt<T>::insert(node<T> *nd, std::pair<int, T> item)
             insert(nd->left, item);
         }
     }
-    return newNode;
 }
 
 /*---------------------------------------
@@ -125,66 +130,87 @@ node<T>* rbt<T>::insert(node<T> *nd, std::pair<int, T> item)
 template <class T>
 void rbt<T>::insertRecolor(node<T> *nd)
 {
-    while(nd != root && nd->parent->color == RED)
+    // Recoloring process ends if node is root or node's parent is red
+    while(nd != root && nd->parent != nullptr && nd->parent->color == RED)
     {
+        /*  End recoloring process early if node does not have a grandpa.
+            The tree is still underdeveloped to need any recoloring,
+            since we don't have an uncle without a grandpa. */
         if(nd->parent->parent == nullptr) return;
+        
+        node<T> *uncle;
+
+        // Determine which side the uncle node is on
         if(nd->parent == nd->parent->parent->left)
         {
-            node<T> *uncle = nd->parent->parent->right;
-            if(uncle != nullptr && uncle->color == RED)
+            uncle = nd->parent->parent->right;
+        }
+        else
+        {
+            uncle = nd->parent->parent->left;            
+        }
+
+        // Case 1: uncle node is red
+        if(uncle != nullptr && uncle->color == RED)
+        {
+            nd->parent->color = BLACK;
+            uncle->color = BLACK;
+            nd->parent->parent->color = RED;
+            nd = nd->parent->parent;
+        }
+        // Case 2: uncle node is black
+        else
+        {
+            // Case 2a: uncle on right
+            if(uncle != nullptr && uncle == nd->parent->parent->right)
             {
-                nd->parent->color = BLACK;
-                uncle->color = BLACK;
-                nd->parent->parent->color = RED;
-                nd = nd->parent->parent;
-            }
-            else
-            {
+                /*  Left-Right Case:
+                    Node's parent on grandpa's left;
+                    Node is on parent's right */
                 if(nd == nd->parent->right)
                 {
                     nd = nd->parent;
                     rotateLeft(nd);
                 }
-                nd->parent->color = BLACK;
-                nd->parent->parent->color = RED;
+
+                /*  Left-Left Case:
+                    Node's parent on grandpa's left;
+                    Node is on parent's left */
+
+                // Swap parent's and grandpa's colors
+                type tmp = nd->parent->color;
+                nd->parent->color = nd->parent->parent->color;
+                nd->parent->parent->color = tmp;
+
                 rotateRight(nd->parent->parent);
             }
-        }
-        else {
-            node<T> *uncle = nd->parent->parent->left;
-            if(uncle != nullptr && uncle->color == RED)
-            {
-                nd->parent->color = BLACK;
-                uncle->color = BLACK;
-                nd->parent->parent->color = RED;
-                nd = nd->parent->parent;
-            }
-            else
-            {
+            // Case 2b: uncle on left
+            else {
                 if(nd == nd->parent->left)
                 {
+                    /*  Right-Left Case:
+                        Node's parent on grandpa's right;
+                        Node is on parent's left */
                     nd = nd->parent;
                     rotateRight(nd);
                 }
-                nd->parent->color = BLACK;
-                nd->parent->parent->color = RED;
+
+                /*  Right-Right Case:
+                    Node's parent on grandpa's right;
+                    Node is on parent's right */
+
+                // Swap parent's and grandpa's colors
+                type tmp = nd->parent->color;
+                nd->parent->color = nd->parent->parent->color;
+                nd->parent->parent->color = tmp;
+
                 rotateLeft(nd->parent->parent);
             }
         }
     }
+
+    // Root node must always be black
     root->color = BLACK;
-}
-
-/*--------------------------------------
-    Get balance factor for rotations
-----------------------------------------*/
-
-template <class T>
-int rbt<T>::balanceFactor(node<T> *nd)
-{
-    int left = (nd->left == nullptr ? 0 : nd->left->height);
-    int right = (nd->right == nullptr ? 0 : nd->right->height);
-    return right - left;
 }
 
 /*---------------------------------------
@@ -282,9 +308,10 @@ void rbt<T>::rotateRight(node<T> *nd)
     nd = tmp;
 }
 
-/*-----------------------------------
-    Search and return node by key
--------------------------------------*/
+/*----------------------------
+    Search and return node
+    pointer by key
+------------------------------*/
 
 template <class T>
 node<T>* rbt<T>::search(int key)
@@ -328,7 +355,7 @@ void rbt<T>::inorder(node<T>* nd)
 {
     if(nd == nullptr) return;
     inorder(nd->left);
-    std::cout << nd->data.first;
+    std::cout << nd->data.second << std::endl;
     inorder(nd->right);
 }
 
@@ -357,9 +384,9 @@ void rbt<T>::printBreadthFirst()
         int test = 0;
         if(p != nullptr)
         {
-            test = front->parent->data.first;
+            test = front->parent->data.second;
         }
-        std::cout << front->data.first << ": " << front->color << " (" << test << ")" << std::endl;
+        std::cout << front->data.second << ": " << front->color << " (" << test << ")" << std::endl;
         nodeSet.pop();
     }
     std::cout << std::endl;
@@ -372,50 +399,16 @@ void rbt<T>::printBreadthFirst()
 template <class T>
 int rbt<T>::getSize() { return this->size; }
 
-/*-------------------
-    Get next node
----------------------*/
-
-template <class T>
-node<T>* rbt<T>::getNextNode(node<T> *nd)
-{
-    node<T> *tmp = nd->right;
-    if(tmp != nullptr)
-    {
-        return getSmallestNode(tmp->right);
-    }
-    else
-    {
-        tmp = nd->parent;
-        while(tmp->right == nd)
-        {
-            nd = tmp->right;
-            tmp = tmp->parent;
-        }
-
-        if(tmp == root) return nullptr;
-        return tmp;
-    }
-}
-
-template <class T>
-node<T>* rbt<T>::getSmallestNode(node<T> *nd)
-{
-    node<T> *current = nd;
-
-    while(current->left != nullptr)
-    {
-        current = current->left;
-    }
-
-    return current;
-}
+/*--------------------------------------
+    Get largest node in same subtree
+----------------------------------------*/
 
 template <class T>
 node<T>* rbt<T>::getLargestNode(node<T> *nd)
 {
     node<T> *current = nd;
 
+    // Largest node is rightmost node of the subtree
     while(current->right != nullptr)
     {
         current = current->right;
@@ -431,11 +424,14 @@ node<T>* rbt<T>::getLargestNode(node<T> *nd)
 template <class T>
 bool rbt<T>::deleteKey(int key)
 {
+    // Confirm node wth key exists
     node<T> *result = search(key);
-
     if(result == nullptr) return false;
 
+    // Delete node with key
     deleteKey(result);
+
+    // Delete corresponding item from vector
     for(int i = 0; i < size; i++)
     {
         if(items[i] == result->data)
@@ -444,92 +440,133 @@ bool rbt<T>::deleteKey(int key)
             break;
         }
     }
+
+    // Update size of vector
     size--;
+
     return true;
 }
 
 template <class T>
 void rbt<T>::deleteKey(node<T> *nd)
 {
+    // tmp is the node we want to delete
     node<T> *tmp = nd;
 
-    if(tmp == nullptr) return;
-
-    // Node has 2 children
+    // tmp has 2 children
     if(tmp->left != nullptr && tmp->right != nullptr)
     {
+        /*  Largest node on tmp's left subtree has
+            largest value below tmp */
         tmp = getLargestNode(tmp->left);
+
+        // Replace deleted node with tmp
         nd->data = tmp->data;
     }
 
+    /*  Check for remaining children
+        - tmp originally had 2 children:
+            In this case, the largest node before tmp
+            replaced the node we want to delete. Now,
+            we want to delete that largest node instead,
+            to avoid have a duplicate node in the tree.
+        - tmp originally had at most 1 child:
+            We are still trying to delete the original node,
+            so we want to determine the child that will take
+            its place. */
     node<T> *remainingChild;
 
     if(tmp->left != nullptr)
     {
         remainingChild = tmp->left;
     }
-    else
+    else if(tmp->right != nullptr)
     {
         remainingChild = tmp->right;
     }
-
+    else
+    {
+        remainingChild = nullptr;
+    }
+    
+    // Case 1: one child node remains
     if(remainingChild != nullptr)
     {
+        /*  Case 1a: tmp is the root,
+            so to replace it, we need
+            to set a new root */
         if(tmp == root)
         {
             root = remainingChild;
             remainingChild->parent = nullptr;
         }
+        // Case 1b: tmp is on the left
         else if(tmp == tmp->parent->left)
         {
             tmp->parent->left = remainingChild;
             remainingChild->parent = tmp->parent;
         }
+        // Case 1c: tmp is on the right
         else
         {
             tmp->parent->right = remainingChild;
             remainingChild->parent = tmp->parent;
         }
 
-        if(getColor(tmp) == BLACK) deleteRecolor(remainingChild);
-
-        delete tmp;
+        // Proceed to case 3 to delete tmp
     }
+
+    // Case 2: tree is now empty
     else if(tmp == root)
     {
         root = nullptr;
+        return;
     }
-    else
+
+    // Case 3: 0 child nodes remain
+    
+    /*  If the tmp node is black, then the tree is not
+        a valid rbt, and needs to be recolored */
+    if(getColor(tmp) == BLACK) deleteRecolor(tmp);
+
+    /*  Before deleting tmp, we want to remove
+        the association its parent has to tmp */
+    if(tmp->parent != nullptr)
     {
-        if(getColor(tmp) == BLACK) deleteRecolor(tmp);
-
-        if(tmp->parent != nullptr)
+        if(tmp == tmp->parent->right)
         {
-            if(tmp == tmp->parent->right)
-            {
-                tmp->parent->right = nullptr;
-            }
-            else
-            {
-                tmp->parent->left = nullptr;
-            }
+            tmp->parent->right = nullptr;
         }
-
-        delete tmp;
+        else
+        {
+            tmp->parent->left = nullptr;
+        }
     }
+
+    delete tmp;
 }
+
+/*----------------------
+    Get node's color
+------------------------*/
 
 template <class T>
 type rbt<T>::getColor(node<T> *nd)
 {
+    // "nullptr" is considered as a black node
     if(nd == nullptr) return BLACK;
     return nd->color;
 }
 
+/*-------------------------------------
+    Examine the deleted node's
+    properties and recolor the tree
+---------------------------------------*/
+
 template <class T>
 void rbt<T>::deleteRecolor(node<T> *nd)
 {
-    while(nd != root && getColor(nd) == BLACK)
+    while(nd != root && nd->parent != nullptr && getColor(nd) == BLACK)
     {
         if(nd == nd->parent->left)
         {
@@ -567,7 +604,7 @@ void rbt<T>::deleteRecolor(node<T> *nd)
                 nd = root;
             }
         }
-        else
+        else if(nd == nd->parent->right)
         {
             node<T> *sibling = nd->parent->left;
 
@@ -627,11 +664,15 @@ rbt<T> rbt<T>::sortedVectorToTree(std::vector<std::pair<int, T> > items)
 template <class T>
 std::vector<std::pair<int, T> > rbt<T>::treeToSortedVector()
 {
-    // Pairs have their own sorting algorithm implemented
-    // by default using their keys for comparisons
+    /*  Pairs have their own sorting algorithm implemented
+        by default using their keys for comparisons */
     std::sort(this->items.begin(), this->items.end());
     return this->items;
 }
+
+/*------------------------------
+    Get nodes in level order
+--------------------------------*/
 
 template<class T>
 std::queue<node<T>*> rbt<T>::getNodeBreadthFirst()
