@@ -13,7 +13,7 @@ int main(int argc, char *argv[])
     w.setWindowTitle("Red-Black Trees");
 
     // Set window's initial dimensions
-    w.setFixedSize(800, 400);
+    w.setFixedSize(800, 430);
 
     // Center window on desktop
     QRect screenGeometry = QApplication::desktop()->screenGeometry();

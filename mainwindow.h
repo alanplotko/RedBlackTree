@@ -33,6 +33,7 @@ public:
 public slots:
     void insertItem();
     void deleteItem();
+    void searchItem();
     void convertTreeToArray();
     void convertArrayToTree();
     void clearTree();
@@ -45,8 +46,8 @@ private:
     QGraphicsView *view;
     QGraphicsScene *scene;
     QGridLayout *mainLayout;
-    QPushButton *insertBtn, *deleteBtn, *toArrayBtn, *toTreeBtn;
-    QLineEdit *deleteLine, *insertLine, *toArrayLine, *toTreeLine;
+    QPushButton *insertBtn, *deleteBtn, *searchBtn, *toArrayBtn, *toTreeBtn;
+    QLineEdit *deleteLine, *searchLine, *insertLine, *toArrayLine, *toTreeLine;
     void setUpMenu();
     void setUpTree();
 

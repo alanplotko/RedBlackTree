@@ -32,7 +32,7 @@ class rbt
         bool deleteKey(int key);
 
         // Tree conversions: to/from a sorted vector
-        rbt<T> sortedVectorToTree(std::vector<std::pair<int, T> > items);
+        void sortedVectorToTree(std::vector<std::pair<int, T> > items);
         std::vector<std::pair<int, T> > treeToSortedVector();
 
         // Tree traversal

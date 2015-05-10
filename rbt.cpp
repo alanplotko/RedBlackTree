@@ -666,15 +666,14 @@ void rbt<T>::deleteRecolor(node<T> *nd)
 -----------------------------*/
 
 template <class T>
-rbt<T> rbt<T>::sortedVectorToTree(std::vector<std::pair<int, T> > items)
+void rbt<T>::sortedVectorToTree(std::vector<std::pair<int, T> > items)
 {
-    rbt<T> tree;
+    cleanRbt();
     unsigned int size = items.size();
     for(unsigned int i = 0; i < size; i++)
     {
-        tree.insert(items[i]);
+        insert(items[i]);
     }
-    return tree;
 }
 
 template <class T>
