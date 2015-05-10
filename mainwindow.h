@@ -1,13 +1,9 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 #include <QMainWindow>
-#include <QSplashScreen>
 #include <QWidget>
-#include <QVBoxLayout>
-#include <QHBoxLayout>
 #include <QPushButton>
 #include <QWindow>
-#include <QPixmap>
 #include <QFrame>
 #include <QGridLayout>
 #include <QTabWidget>
@@ -25,23 +21,28 @@ class MainWindow;
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
+    rbt<int> tree;
 
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
 public slots:
-
+    void insertItem();
+    void deleteItem();
+    void convertTreeToArray();
+    void convertArrayToTree();
+    void clearTree();
+    void quitApp();
 
 private:
     Ui::MainWindow *ui;
     QWidget *mainWidget;
-    QGridLayout *mainLayout, *buttonCol1,*buttonCol2;
-    QHBoxLayout *buttonLayout;
-    QPushButton *insertB,*deleteB,*toArrayB,*toTreeB;
-    QLineEdit *dLine,*iLine,*toTLine;
-    QFrame *div1,*div2,*div3,*div4,*div5;
-    rbt<int> tree;
+    QGridLayout *mainLayout;
+    QPushButton *insertBtn, *deleteBtn, *toArrayBtn, *toTreeBtn;
+    QLineEdit *deleteLine, *insertLine, *toArrayLine, *toTreeLine;
+    void setUpMenu();
+
 };
 
 #endif // MAINWINDOW_H
