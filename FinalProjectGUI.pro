@@ -14,11 +14,13 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    rbt.cpp
+    rbt.cpp \
+    nodegraphic.cpp
 
 HEADERS  += mainwindow.h \
     node.h \
-    rbt.h
+    rbt.h \
+    nodegraphic.h
 
 CONFIG += c++11
 

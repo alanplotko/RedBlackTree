@@ -5,6 +5,7 @@
 #include <QMessageBox>
 #include <limits>
 #include <QFrame>
+#include "nodegraphic.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -169,6 +170,12 @@ void MainWindow::insertItem()
 
     tree.insert(std::make_pair(num, num));
     insertLine->clear();
+    QColor color;
+    QGraphicsItem *item = new NodeGraphic(color, 50, 50);
+    QGraphicsItem *item2 = new NodeGraphic(color, 50, 50);
+    item->setPos(QPointF(0, 0));
+    item2->setPos(QPointF(-1, -1));
+    scene->addItem(item);
     ui->statusBar->showMessage("Added a new integer: " + QString::number(num));
     insertBtn->setDisabled(false);
 }
