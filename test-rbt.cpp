@@ -9,7 +9,7 @@ int main()
     -----------------------------------*/
 
   rbt<int> tree;
-  std::vector<int> nums = { -12, 1};
+  std::vector<int> nums = { -12, 1, 4, 5, 6, 24, 654 };
 
   for(auto itr : nums)
     {
@@ -69,23 +69,23 @@ int main()
     Delete Key Tests
     --------------------------*/
 
-  /*std::clog << std::endl;
+	std::clog << std::endl;
 
     tree.printBreadthFirst();
 
-    std::clog << "\nDeleting 7:\n" << std::endl;
+    std::clog << "\nDeleting 4:\n" << std::endl;
     
-    tree.deleteKey(7);
+    tree.deleteKey(4);
 
     tree.printBreadthFirst();
     
-    std::clog << "\nDeleting 3:\n" << std::endl;
+    std::clog << "\nDeleting 24:\n" << std::endl;
 
-    tree.deleteKey(3);
+    tree.deleteKey(24);
     
     tree.printBreadthFirst();
 
-    std::clog << "\nDeleting 8:\n" << std::endl;
+    /*std::clog << "\nDeleting 8:\n" << std::endl;
 
     tree.deleteKey(8);
     
