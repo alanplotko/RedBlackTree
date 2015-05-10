@@ -32,6 +32,11 @@ MainWindow::MainWindow(QWidget *parent) :
     toArrayBtn = new QPushButton("Fetch Array");
     toTreeBtn = new QPushButton("Load from Array");
 
+    //Graphics
+    scene = new QGraphicsScene();
+    view = new QGraphicsView();
+    view ->setScene(scene);
+
     //textLine
     insertLine = new QLineEdit();
     deleteLine = new QLineEdit();
@@ -65,6 +70,7 @@ MainWindow::MainWindow(QWidget *parent) :
     mainLayout->addWidget(separatorLine, 1, 2, 2, 1);
     mainLayout->addWidget(toTreeLine, 1, 3, 1, 2);
     mainLayout->addWidget(toArrayLine, 2, 3, 1, 2);
+    mainLayout ->addWidget(view,0,0,1,6);
 
     // Set slots
     connect(insertBtn, SIGNAL(released()), this, SLOT(insertItem()));

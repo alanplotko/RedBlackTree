@@ -12,6 +12,8 @@
 #include <QLineEdit>
 #include <QLabel>
 #include <QMainWindow>
+#include <QGraphicsScene>
+#include <QGraphicsView>
 #include "rbt.h"
 
 namespace Ui {
@@ -38,6 +40,8 @@ public slots:
 private:
     Ui::MainWindow *ui;
     QWidget *mainWidget;
+    QGraphicsView *view;
+    QGraphicsScene *scene;
     QGridLayout *mainLayout;
     QPushButton *insertBtn, *deleteBtn, *toArrayBtn, *toTreeBtn;
     QLineEdit *deleteLine, *insertLine, *toArrayLine, *toTreeLine;
