@@ -44,7 +44,6 @@ MainWindow::MainWindow(QWidget *parent) :
     deleteLine = new QLineEdit();
     toTreeLine = new QLineEdit();
     toArrayLine = new QLineEdit();
-    toArrayLine->setDisabled(true);
 
     insertLine->setPlaceholderText("(1 Integer)");
     insertLine->setAlignment(Qt::AlignCenter);
