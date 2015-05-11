@@ -171,6 +171,7 @@ void MainWindow::insertItem()
 
     tree.insert(std::make_pair(num, num));
     insertLine->clear();
+    scene->clearFocus();
     setUpTree();
     ui->statusBar->showMessage("Added a new integer: " + QString::number(num));
     insertBtn->setDisabled(false);
@@ -332,7 +333,7 @@ void MainWindow::setUpTree()
     setUpQ = tree.getNodeBreadthFirst();
     for(int i = 0;i<tree.getSize(); i++)
     {
-        if(tWidth < pow(2,tHeight))
+        if(tWidth <= pow(2,tHeight))
         {
            QColor ndColor;
             if(setUpQ.front() -> color == RED)
@@ -345,7 +346,7 @@ void MainWindow::setUpTree()
             }
             ndData = setUpQ.front()->data.second;
             QGraphicsItem *item = new NodeGraphic(ndColor, 5, 5, ndData);
-            item->setPos(QPointF(tWidth*50, tHeight*50));
+            item->setPos(QPointF(tWidth*100, tHeight*50));
             scene->addItem(item);
             tWidth++;
             setUpQ.pop();
@@ -356,5 +357,5 @@ void MainWindow::setUpTree()
         }
 
     }
-    std::cout << tHeight << std::endl;
+    //std::cout << tHeight << std::endl;
 }
