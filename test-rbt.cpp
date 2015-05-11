@@ -9,7 +9,7 @@ int main()
     -----------------------------------*/
 
   rbt<int> tree;
-  std::vector<int> nums = { -12, 1};
+  std::vector<int> nums = { -12, 1,6,8};
 
   for(auto itr : nums)
     {
@@ -52,7 +52,7 @@ int main()
 
   /*------------------------
     getNodeBreadthTest
-    -------------------------*/
+  -------------------------*/
 
   std::queue<node<int>* > myNodes = tree.getNodeBreadthFirst();
   int tHeight = 0;
@@ -101,11 +101,11 @@ int main()
 
     tree.deleteKey(10);
     
-    tree.printBreadthFirst();
+    tree.printBreadthFirst();*/
 
-  /*------------------------
+   /*------------------------
     Sorted Array Tests
-    --------------------------*/
+   --------------------------*/
 
   /*std::vector<std::pair<int, int> > vct = tree.treeToSortedArray();
 

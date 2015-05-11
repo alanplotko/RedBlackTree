@@ -16,6 +16,7 @@
 #include <QGraphicsView>
 #include <queue>
 #include "rbt.h"
+#include <iostream>
 
 namespace Ui {
 class MainWindow;
@@ -47,6 +48,7 @@ private:
     QGridLayout *mainLayout;
     QPushButton *insertBtn, *deleteBtn, *toArrayBtn, *toTreeBtn;
     QLineEdit *deleteLine, *insertLine, *toArrayLine, *toTreeLine;
+    int  ndData;
     void setUpMenu();
     void setUpTree();
 
