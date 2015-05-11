@@ -16,6 +16,7 @@
 #include <QGraphicsView>
 #include <queue>
 #include "rbt.h"
+#include <iostream>
 
 namespace Ui {
 class MainWindow;
@@ -41,13 +42,14 @@ public slots:
 
 private:
     Ui::MainWindow *ui;
-    std::queue<node<int>*> setUpQ;
+    std::queue<node<int>* > setUpQ;
     QWidget *mainWidget;
     QGraphicsView *view;
     QGraphicsScene *scene;
     QGridLayout *mainLayout;
     QPushButton *insertBtn, *deleteBtn, *searchBtn, *toArrayBtn, *toTreeBtn;
     QLineEdit *deleteLine, *searchLine, *insertLine, *toArrayLine, *toTreeLine;
+    int ndData;
     void setUpMenu();
     void setUpTree();
 

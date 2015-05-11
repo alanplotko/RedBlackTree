@@ -1,6 +1,7 @@
 #include "nodegraphic.h"
 
 
+
 #include <QtWidgets>
 
 NodeGraphic::NodeGraphic(const QColor &color, int x, int y, int numIn)
@@ -30,7 +31,9 @@ void NodeGraphic::paint(QPainter *painter, const QStyleOptionGraphicsItem *optio
     QColor fillColor = (option->state & QStyle::State_Selected) ? color.dark(150) : color;
     if (option->state & QStyle::State_MouseOver)
         fillColor = fillColor.light(125);
-    painter->drawText(0, 0, QString(QString::number(numIn)));
+    painter->setPen(Qt::green);
+    painter->drawText(x, y, QString(QString::number(numIn)));
+    painter ->setPen(Qt::black);
 
     const qreal lod = option->levelOfDetailFromTransform(painter->worldTransform());
     if (lod < 0.2) {

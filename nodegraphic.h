@@ -5,6 +5,7 @@
 #include <QColor>
 #include <QGraphicsItem>
 
+
 class NodeGraphic : public QGraphicsItem
 {
 public:

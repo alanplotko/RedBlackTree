@@ -9,6 +9,7 @@
 #include "nodegraphic.h"
 #include <QLabel>
 
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -189,13 +190,7 @@ void MainWindow::insertItem()
 
     tree.insert(std::make_pair(num, num));
     insertLine->clear();
-//    QColor color(255,55,56);
-//    QGraphicsItem *item = new NodeGraphic(color, 5, 5, num);
-//    QGraphicsItem *item2 = new NodeGraphic(color, 5, 5, num);
-//    item->setPos(QPointF(0, 0));
-//    item2->setPos(QPointF(60, 60));
-//    scene->addItem(item);
-//    scene ->addItem(item2);
+    scene->clearFocus();
     setUpTree();
     ui->statusBar->showMessage("Added a new integer: " + QString::number(num));
     insertBtn->setDisabled(false);
@@ -409,8 +404,21 @@ void MainWindow::setUpTree()
     setUpQ = tree.getNodeBreadthFirst();
     for(int i = 0;i<tree.getSize(); i++)
     {
-        if(tWidth < pow(2,tHeight))
+        if(tWidth <= pow(2,tHeight))
         {
+           QColor ndColor;
+            if(setUpQ.front() -> color == RED)
+            {
+                ndColor.setRgb(206,32,41);
+            }
+            else
+            {
+                ndColor.setRgb(0,0,0);
+            }
+            ndData = setUpQ.front()->data.second;
+            QGraphicsItem *item = new NodeGraphic(ndColor, 5, 5, ndData);
+            item->setPos(QPointF(tWidth*100, tHeight*50));
+            scene->addItem(item);
             tWidth++;
             setUpQ.pop();
         }
@@ -418,6 +426,7 @@ void MainWindow::setUpTree()
         {
             tHeight++;
         }
-    }
 
+    }
+    //std::cout << tHeight << std::endl;
 }
