@@ -455,7 +455,7 @@ void MainWindow::setUpTree()
             item->setToolTip(QString::fromStdString(text));
             scene->itemIndexMethod();
 
-            int xPos = 50 * pow(2,tHeight-1) + 50 * (pow(2,tHeight-1)-1);
+            int xPos = 50 * tWidth;
             if(setUpQ.front()->parent != nullptr)
             {
 
@@ -468,7 +468,6 @@ void MainWindow::setUpTree()
                 else
                 {
                     item->setPos(QPointF(-xPos, 50+tHeight*50));
-
                 }
 
             }
