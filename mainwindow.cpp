@@ -8,6 +8,7 @@
 #include <cmath>
 #include "nodegraphic.h"
 #include <QLabel>
+#include <QGraphicsEffect>
 
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -41,10 +42,10 @@ MainWindow::MainWindow(QWidget *parent) :
     //Graphics
     scene = new QGraphicsScene();
     view = new QGraphicsView();
-    view->setAlignment(Qt::AlignTop);
+    //view->setAlignment(Qt::AlignTop);
     view->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
     view->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
-    //view->fitInView(scene->itemsBoundingRect(), Qt::KeepAspectRatio);
+    view->fitInView(scene->itemsBoundingRect(), Qt::KeepAspectRatio);
     view->setScene(scene);
 
     //textLine
@@ -413,7 +414,6 @@ void MainWindow::setUpTree()
 {
     int tHeight = 0;
     int tWidth = 0;
-    int numNodes = 0;
     setUpQ = tree.getNodeBreadthFirst();
     int treeSize = tree.getSize();
     for(int i = 0; i < treeSize; i++)
@@ -436,6 +436,7 @@ void MainWindow::setUpTree()
             QGraphicsItem *item = new NodeGraphic(ndColor, 10, 10, ndData);
             item->setAcceptHoverEvents(true);
 
+
             // Build tooltip
             std::string text = "";
             text += "Data: ";
@@ -452,19 +453,31 @@ void MainWindow::setUpTree()
                 text += ", root";
             }
             item->setToolTip(QString::fromStdString(text));
+            scene->itemIndexMethod();
 
-            if(flag)
+            int xPos = 50 * pow(2,tHeight-1) + 50 * (pow(2,tHeight-1)-1);
+            if(setUpQ.front()->parent != nullptr)
             {
-                item->setPos(QPointF(tWidth * 50, tHeight * 50));
-            }
-            else
-            {
-                item->setPos(QPointF(-tWidth * 50, tHeight * 50));
+
+                if(setUpQ.front() == setUpQ.front() -> parent -> right)
+                {
+                    item->setPos(QPointF(xPos, 50+tHeight*50));
+
+                }
+
+                else
+                {
+                    item->setPos(QPointF(-xPos, 50+tHeight*50));
+
+                }
+
             }
             tWidth++;
             scene->addItem(item);
             setUpQ.pop();
+
         }
+
         if(tWidth == pow(2,tHeight))
         {
             tHeight++;

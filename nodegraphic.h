@@ -17,7 +17,6 @@ private:
     int y;
     int numIn;
     QColor color;
-    bool isLeft;
     QVector<QPointF> stuff;
 };
 

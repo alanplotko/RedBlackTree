@@ -7,7 +7,6 @@ NodeGraphic::NodeGraphic(const QColor &color, int x, int y, int numIn)
     this->y = y;
     this->numIn = numIn;
     this->color = color;
-    this->isLeft = isLeft;
 }
 
 QRectF NodeGraphic::boundingRect() const
