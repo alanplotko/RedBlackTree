@@ -461,7 +461,7 @@ void MainWindow::setUpTree()
 
                 if(setUpQ.front() == setUpQ.front() -> parent -> right)
                 {
-                    item->setPos(QPointF(xPos, 50+tHeight*50));
+                    item->setPos(QPointF(xPos, tHeight*50));
 
                 }
 
