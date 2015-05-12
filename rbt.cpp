@@ -8,10 +8,7 @@
 ---------------------------*/
 
 template <class T>
-rbt<T>::~rbt()
-{
-    cleanRbt(root);
-}
+rbt<T>::~rbt() { cleanRbt(root); }
 
 /*----------------------------------
    Destroy all nodes in RBT tree
@@ -582,12 +579,17 @@ type rbt<T>::getColor(node<T> *nd)
 template <class T>
 void rbt<T>::deleteRecolor(node<T> *nd)
 {
+    // Only recolor non-root black nodes
     while(nd != root && nd->parent != nullptr && getColor(nd) == BLACK)
     {
+        // Case 1: node lies on left
         if(nd == nd->parent->left)
         {
             node<T> *sibling = nd->parent->right;
 
+            /*  Sibling is a red node: shift red up to parent,
+                color sibling node black, rotate newly red parent left,
+                and set the sibling to the parent's right */
             if(getColor(sibling) == RED)
             {
                 sibling->color = BLACK;
@@ -596,13 +598,22 @@ void rbt<T>::deleteRecolor(node<T> *nd)
                 sibling = nd->parent->right;
             }
 
+            /*  Sibling's children are both black nodes: RBT red nodes
+                must have black child nodes, so color the sibling node
+                red and set the node to its parent */
             if(getColor(sibling->left) == BLACK && getColor(sibling->right) == BLACK)
             {
                 sibling->color = RED;
                 nd = nd->parent;
             }
+            // Sibling has < 2 black child nodes: determine which sides
             else
             {
+                /*  Sibling's right child node is black: match the left and
+                    make the sibling red, thus following the RBT property
+                    where red nodes have black child nodes. Rotate sibling
+                    right to position the tree correctly and set sibling
+                    to its parent's right */
                 if(getColor(sibling->right) == BLACK)
                 {
                     sibling->left->color = BLACK;
@@ -610,16 +621,26 @@ void rbt<T>::deleteRecolor(node<T> *nd)
                     rotateRight(sibling);
                     sibling = nd->parent->right;
                 }
+
+                /*  Sibling's color will match its parent's color
+                    before flipping the parent node's color to black */
                 sibling->color = nd->parent->color;
                 nd->parent->color = BLACK;
+
+                /*  Take care of any additional black child nodes
+                    by rotating the parent left */
                 if(sibling->right != nullptr)
                 {
                     sibling->right->color = BLACK;
                 }
                 rotateLeft(nd->parent);
+
+                // Exit loop
                 nd = root;
             }
         }
+        /*  Case 2: node lies on right;
+                    follows case 1, but switches left's and right's */
         else if(nd == nd->parent->right)
         {
             node<T> *sibling = nd->parent->left;
@@ -668,6 +689,7 @@ void rbt<T>::deleteRecolor(node<T> *nd)
 template <class T>
 void rbt<T>::sortedVectorToTree(std::vector<std::pair<int, T> > items)
 {
+    // Clear the current tree to insert the new one
     cleanRbt();
     unsigned int size = items.size();
     for(unsigned int i = 0; i < size; i++)

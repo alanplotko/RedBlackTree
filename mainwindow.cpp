@@ -41,7 +41,11 @@ MainWindow::MainWindow(QWidget *parent) :
     //Graphics
     scene = new QGraphicsScene();
     view = new QGraphicsView();
-    view ->setScene(scene);
+    view->setAlignment(Qt::AlignTop);
+    view->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+    view->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+    //view->fitInView(scene->itemsBoundingRect(), Qt::KeepAspectRatio);
+    view->setScene(scene);
 
     //textLine
     insertLine = new QLineEdit();
@@ -190,6 +194,7 @@ void MainWindow::insertItem()
 
     tree.insert(std::make_pair(num, num));
     insertLine->clear();
+    scene->clear();
     scene->clearFocus();
     setUpTree();
     ui->statusBar->showMessage("Added a new integer: " + QString::number(num));
@@ -230,6 +235,9 @@ void MainWindow::deleteItem()
 
     bool result = tree.deleteKey(key);
     deleteLine->clear();
+    scene->clear();
+    scene->clearFocus();
+    setUpTree();
     if(result)
     {
         QMessageBox::information(this, tr("Success"), tr("Node removed from the red-black tree!"));
@@ -364,6 +372,9 @@ void MainWindow::convertArrayToTree()
     tree.sortedVectorToTree(vct);
 
     toTreeLine->clear();
+    scene->clear();
+    scene->clearFocus();
+    setUpTree();
     toTreeBtn->setDisabled(false);
     QMessageBox::information(this, tr("Success"), tr("Loaded array into the red-black tree!"));
     ui->statusBar->showMessage("Success: loaded array into the red-black tree");
@@ -381,6 +392,7 @@ void MainWindow::clearTree()
     else
     {
         tree.cleanRbt();
+        scene->clear();
         QMessageBox::information(this, tr("Success"), tr("The red-black tree has been cleared!"));
         ui->statusBar->showMessage("Success: cleared the red-black tree");
     }
@@ -401,32 +413,63 @@ void MainWindow::setUpTree()
 {
     int tHeight = 0;
     int tWidth = 0;
+    bool flag = true;
     setUpQ = tree.getNodeBreadthFirst();
-    for(int i = 0;i<tree.getSize(); i++)
+    int treeSize = tree.getSize();
+    for(int i = 0; i < treeSize; i++)
     {
-        if(tWidth <= pow(2,tHeight))
+        if(tWidth <= pow(2, tHeight))
         {
-           QColor ndColor;
-            if(setUpQ.front() -> color == RED)
+            QColor ndColor;
+            std::string color;
+            if(setUpQ.front()->color == RED)
             {
                 ndColor.setRgb(206,32,41);
+                color = "red";
             }
             else
             {
                 ndColor.setRgb(0,0,0);
+                color = "black";
             }
             ndData = setUpQ.front()->data.second;
-            QGraphicsItem *item = new NodeGraphic(ndColor, 5, 5, ndData);
-            item->setPos(QPointF(tWidth*100, tHeight*50));
-            scene->addItem(item);
+            QGraphicsItem *item = new NodeGraphic(ndColor, 10, 10, ndData, flag);
+            item->setAcceptHoverEvents(true);
+
+            // Build tooltip
+            std::string text = "";
+            text += "Data: ";
+            text += std::to_string(ndData);
+            text += ", color: ";
+            text += color;
+            if(setUpQ.front()->parent != nullptr)
+            {
+                text += ", parent: ";
+                text += std::to_string(setUpQ.front()->parent->data.second);
+            }
+            else
+            {
+                text += ", root";
+            }
+            item->setToolTip(QString::fromStdString(text));
+
+            if(flag)
+            {
+                item->setPos(QPointF(tWidth * 50, tHeight * 50));
+            }
+            else
+            {
+                item->setPos(QPointF(-tWidth * 50, tHeight * 50));
+            }
             tWidth++;
+            flag = !flag; // flip flag
+            scene->addItem(item);
             setUpQ.pop();
         }
         if(tWidth == pow(2,tHeight))
         {
             tHeight++;
         }
-
     }
-    //std::cout << tHeight << std::endl;
+    std::cout << tWidth << ", " << tHeight << std::endl;
 }
