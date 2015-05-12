@@ -7,7 +7,7 @@
 class NodeGraphic : public QGraphicsItem
 {
 public:
-    NodeGraphic(const QColor &color, int x, int y, int numIn, bool isLeft);
+    NodeGraphic(const QColor &color, int x, int y, int numIn);
     QRectF boundingRect() const Q_DECL_OVERRIDE;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget) Q_DECL_OVERRIDE;
 

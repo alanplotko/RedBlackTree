@@ -1,7 +1,7 @@
 #include "nodegraphic.h"
 #include <QtWidgets>
 
-NodeGraphic::NodeGraphic(const QColor &color, int x, int y, int numIn, bool isLeft)
+NodeGraphic::NodeGraphic(const QColor &color, int x, int y, int numIn)
 {
     this->x = x;
     this->y = y;

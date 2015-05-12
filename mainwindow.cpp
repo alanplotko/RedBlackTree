@@ -413,7 +413,7 @@ void MainWindow::setUpTree()
 {
     int tHeight = 0;
     int tWidth = 0;
-    bool flag = true;
+    int numNodes = 0;
     setUpQ = tree.getNodeBreadthFirst();
     int treeSize = tree.getSize();
     for(int i = 0; i < treeSize; i++)
@@ -433,7 +433,7 @@ void MainWindow::setUpTree()
                 color = "black";
             }
             ndData = setUpQ.front()->data.second;
-            QGraphicsItem *item = new NodeGraphic(ndColor, 10, 10, ndData, flag);
+            QGraphicsItem *item = new NodeGraphic(ndColor, 10, 10, ndData);
             item->setAcceptHoverEvents(true);
 
             // Build tooltip
@@ -462,7 +462,6 @@ void MainWindow::setUpTree()
                 item->setPos(QPointF(-tWidth * 50, tHeight * 50));
             }
             tWidth++;
-            flag = !flag; // flip flag
             scene->addItem(item);
             setUpQ.pop();
         }
